@@ -28,20 +28,6 @@ public class HomeController : Controller
         return View();
     }
 
-    [HttpGet]
-    public async Task <IActionResult> Overview()
-    {
-        var addresses = await _addressService.ReadAddressesAsync(true, false, "Denmark", 0, 10);
-        var info = await _adminService.GuestInfoAsync();
-
-        var model = new OverviewViewModel
-        {
-            CountryInfo = info.Item.Friends.Where(i => i.Country == "Denmark")
-        };
-
-        return View(model);
-    }
-
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

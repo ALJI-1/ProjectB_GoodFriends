@@ -1,8 +1,9 @@
-namespace AppMvc.Models;
-using global::Models.DTO;
+using Models.DTO;
 
-public class OverviewViewModel
+namespace AppMvc.Models
 {
-    public IEnumerable<GstUsrInfoFriendsDto> CountryInfo;
-    
+    public class OverviewModel
+    {
+        public IEnumerable<GstUsrInfoFriendsDto> CountryInfo { get; set; }
+    }
 }

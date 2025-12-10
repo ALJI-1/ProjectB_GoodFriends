@@ -5,18 +5,18 @@
 
 <!-- Page web-api-info -->
 <div class="container px-4 py-4" id="webapi-info">
-    <h2 class="pb-2 border-bottom">WebApi info</h2>
-    <p>Below you see an overview of the content presented by the WebApi. Click on the link to see details. </p>
+    <h2 class="pb-2 border-bottom">Cities Overview</h2>
+    <p>Below you see an overview of friends and pets by city.</p>
 
-@foreach (var item in Model.CityInfoList)
+    @foreach (var item in Model.CityInfoList)
     {
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4 py-5">
-            <div class="col d-flex align-items-start">
-                <svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#boombox"/></svg>
-                <div>
-                    <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">@(item.City != null ? item.City : item.Country)</h3>
-                    <p>Friends: @item.NrFriends Pets: @item.NrPets</p>
-                </div>
+        <div class="row mb-2 text-center">
+            <div class="col-md-10 themed-grid-col">
+                <strong>@(item.City ?? item.Country)</strong>
+                <div class="text-muted small">Friends: @item.NrFriends - Pets: @item.NrPets</div>
+            </div>
+            <div class="col-md-2 themed-grid-col">
+                <button class="btn btn-success btn-sm" type="button">View</button>
             </div>
         </div>
     }

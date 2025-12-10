@@ -6,6 +6,8 @@
     <title>@ViewData["Title"] - AppRazor</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/bootstrap/grid.css" />
+    <link rel="stylesheet" href="~/css/bootstrap/features.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/AppRazor.styles.css" asp-append-version="true" />
 
@@ -56,13 +58,16 @@
                             <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
                         </li>                       
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Friends/Overview">Friends Overview</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Friends/FriendsListModel">List of Friends</a>
+                        </li> 
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Friends/CountryOverview">Country Overview</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Friends/FriendsPetsOfACityInACountry">Friends/Pets Of A City In A Country</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Friends/FriendsPetsOfACityInACountry">Cities Overview</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Friends/AllFriendsInACountry">All Friends In A Country</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Friends/FriendsInACountry">All Friends In A Country</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Friends/Seed">Seed Friends</a>
@@ -73,7 +78,7 @@
         </nav>
     </header>
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main" class="pb-5 mb-5">
             @RenderBody()
         </main>
     </div>

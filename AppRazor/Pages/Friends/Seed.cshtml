@@ -1,5 +1,5 @@
 ﻿@page
-@model AppRazor.Pages.SeedModel
+@model AppRazor.Pages.Friends.SeedModel
 @{
     ViewData["Title"] = "Seed";
 }
@@ -14,8 +14,7 @@
         Current the database contains @Model.NrOfGroups friends. Reseed according to the number of items you want.
         You may optionally remove the old data before seeding.
     </p>
-§>
-        <div class="col-md-7 col-lg-8">
+    <div class="col-md-7 col-lg-8">
             <form class="needs-validation" method="post" novalidate>
                 <div class="row g-3">
                     <div class="col-sm-6">

@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Services.Interfaces;
 
-namespace AppRazor.Pages
+namespace AppRazor.Pages.Friends
 {
     public class SeedModel : PageModel
     {
         //Just like for WebApi
-        readonly IAdminService _admin_service = null;
-        readonly ILogger<SeedModel> _logger = null;
+        readonly IAdminService _admin_service;
+        readonly ILogger<SeedModel> _logger;
 
         public int NrOfGroups => nrOfFriends().Result;
         private async Task<int> nrOfFriends()
@@ -40,7 +40,7 @@ namespace AppRazor.Pages
                 }
                 await _admin_service.SeedAsync(NrOfItemsToSeed);
 
-                return Redirect($"~/Overview");
+                return RedirectToPage("/Friends/ModelListModel");
             }
             return Page();
         }

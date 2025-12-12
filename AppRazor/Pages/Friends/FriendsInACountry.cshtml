@@ -3,8 +3,46 @@
 @{
     ViewData["Title"] = "All Friends In A Country";
 }
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@attribute [IgnoreAntiforgeryToken]
 
-<div class="container px-4 py-4">
+<div>
+    <form method="get" asp-page="FriendsInACountry">
+        <div class="row mb-2 text-center">
+            <div class="col-md-10 themed-grid-col">
+                <label for="countries" class="form-label">Select country</label>
+                <select asp-for="SelectedCountry" asp-items="Html.GetEnumSelectList<AppRazor.Pages.Friends.Countries>()" class="form-control" id="countries" name="filter">
+                    <option value="">Pick one</option>
+                </select>
+            </div>
+            <div class="col-md-2 themed-grid-col">
+                <button class="btn btn-success btn-sm" type="submit">Submit</button>
+            </div>
+        </div>
+    </form>
+    @if (!Model.SelectedCountry.HasValue || string.IsNullOrEmpty(Model.Filter))
+    {
+        <div class="alert alert-warning" role="alert">
+            Please select a country to view friends.
+        </div>
+    }
+    else{
+    <div id="webapi-info">
+    <h2 class="pb-2 border-bottom">Cities in @Model.Filter</h2>
+
+    @foreach (var item in Model.CityInfoList)
+    {
+        <div class="row mb-2 text-center">
+            <div class="col-md-10 themed-grid-col">
+                <strong>@item.City</strong>
+                <div class="text-muted small">Friends: @item.NrFriends - Pets: @item.NrPets</div>
+            </div>
+            <div class="col-md-2 themed-grid-col">
+                <a asp-page="FriendsInACity" asp-route-city="@item.City" asp-route-country="@item.Country" class="btn btn-success btn-sm" type="button">View</a>
+            </div>
+        </div>
+    }
+
     <h2 class="pb-2 border-bottom">All Friends In @Model.Filter</h2>
 
     @foreach (var friend in Model.Friends)
@@ -46,4 +84,6 @@
             </li>
         </ul>
     </nav>
+    
 </div>
+}

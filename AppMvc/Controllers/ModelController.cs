@@ -59,16 +59,16 @@ public class ModelController : Controller
     }
 
     [HttpGet]
-    public async Task <IActionResult> FriendsPetsOfACityInACountry()
+    public async Task <IActionResult> CityOverview()
     {
-        var fm = new FriendsPetsOfACityInACountryModel();
+        var fm = new CityOverviewModel();
 
         var info = await _adminService.GuestInfoAsync();
 
         var friends = info.Item.Friends.Where(i => i.Country == "Denmark");
         var pets = info.Item.Pets.Where(i => i.Country == "Denmark");
         
-        fm.CityInfoList = friends.Select(f => new FriendsPetsOfACityInACountryModel
+        fm.CityInfoList = friends.Select(f => new CityOverviewModel
             {
                 Country = f.Country,
                 City = f.City,

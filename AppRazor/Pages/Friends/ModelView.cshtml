@@ -44,10 +44,23 @@
                             <label for="friendName" class="form-label">Friend Name</label>
                             <input type="text" class="form-control" id="friendName" value="@Model.Friend?.FirstName @Model.Friend?.LastName" readonly>
                         </div>
+
                         <div class="col-sm-12">
                             <label for="friendPets" class="form-label">Friends Pets</label>
-                            <input type="text" class="form-control" id="friendPets" value="@(Model.Friend?.Pets?.Count ?? 0)" readonly>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="friendPets" value="@(Model.Friend?.Pets?.Count ?? 0)" readonly>
+                                <a asp-page="FriendsDetails" asp-route-id="@Model.Friend?.FriendId" asp-route-view="pets" class="btn btn-success btn-sm" type="button">View</a>
+                            </div>  
                         </div>
+
+                        <div class="col-sm-12">
+                            <label for="friendQuotes" class="form-label">Friends Quotes</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="friendQuotes" value="@(Model.Friend?.Quotes?.Count ?? 0)" readonly>
+                                <a asp-page="FriendsDetails" asp-route-id="@Model.Friend?.FriendId" asp-route-view="quotes" class="btn btn-success btn-sm" type="button">View</a>
+                            </div>                            
+                        </div>
+
                         <div class="col-sm-12">
                             <label class="form-label">Address
                                 <a asp-page="EditAddress" asp-route-id=@Model.Friend?.FriendId >                   

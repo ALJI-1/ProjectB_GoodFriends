@@ -1,0 +1,64 @@
+@page
+@model AppRazor.Pages.Friends.FriendsInACityModel
+@{
+    ViewData["Title"] = "Friends and Pets In A City";
+}
+
+<div>
+    <h2 class="pb-2 border-bottom">@Model.City, @Model.Country</h2>
+
+    <h4 class="mt-4">Friends</h4>
+    @foreach (var friend in Model.Friends)
+    {
+        <div class="row mb-2 text-center">
+            <div class="col-md-10 themed-grid-col">
+                <strong>@friend.FirstName @friend.LastName</strong>
+                <div class="text-end fst-italic">@friend.Email</div>
+                <div class="text-muted small">@friend.Address?.StreetAddress</div>
+            </div>
+            <div class="col-md-2 themed-grid-col">
+                <a asp-page="ModelView" asp-route-id=@friend.FriendId class="btn btn-success btn-sm" type="button">View</a>
+                <a asp-page="EditFriend" asp-route-id=@friend.FriendId class="btn btn-success btn-sm" type="button">Edit</a>
+            </div>
+        </div>
+    }
+
+    <h4 class="mt-5">Pets</h4>
+    @foreach (var pet in Model.Pets)
+    {
+        <div class="row mb-2 text-center">
+            <div class="col-md-10 themed-grid-col">
+                <strong>@pet.Name</strong>
+                <div class="text-muted small">@pet.Kind</div>
+            </div>
+        </div>
+    }
+
+    @if (Model.PresentPages > 1)
+    {
+        <nav aria-label="Standard pagination example" class="mt-4 mb-5">
+            <ul class="pagination">
+                <li class="page-item">
+                    <a class="page-link" asp-page="FriendsInACity" asp-route-pagenr="@Model.PrevPageNr" asp-route-city="@Model.City" asp-route-country="@Model.Country" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                @{
+                    int startPage = Math.Max(0, Model.ThisPageNr - 1);
+                    int endPage = Math.Min(Model.PresentPages - 1, Model.ThisPageNr + 1);
+                }
+                @for (int i = startPage; i <= endPage; i++)
+                {
+                    <li class="page-item @(i == Model.ThisPageNr ? "active" : "")">
+                        <a class="page-link" asp-page="FriendsInACity" asp-route-pagenr="@i" asp-route-city="@Model.City" asp-route-country="@Model.Country">@(i+1)</a>
+                    </li>
+                }
+                <li class="page-item">
+                    <a class="page-link" asp-page="FriendsInACity" asp-route-pagenr="@Model.NextPageNr" asp-route-city="@Model.City" asp-route-country="@Model.Country" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    }
+</div>

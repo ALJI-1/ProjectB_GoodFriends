@@ -1,0 +1,63 @@
+@page
+@model AppRazor.Pages.Friends.FriendsDetailsModel
+@{
+    ViewData["Title"] = Model.ViewType == "pets" ? "Friend's Pets" : "Friend's Quotes";
+}
+
+<div class="container px-4 py-4">
+    @if (Model.ErrorMessage != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @Model.ErrorMessage
+        </div>
+    }
+    else if (Model.Friend != null)
+    {
+        <h2 class="pb-2 border-bottom">@Model.Friend.FirstName @Model.Friend.LastName - @(Model.ViewType == "pets" ? "Pets" : "Quotes")</h2>
+
+        @if (Model.ViewType == "pets")
+        {
+            @if (Model.Pets.Any())
+            {
+                @foreach (var pet in Model.Pets)
+                {
+                    <div class="row mb-2 text-center">
+                        <div class="col-md-10 themed-grid-col">
+                            <strong>@pet.Name</strong>
+                            <div class="text-muted small">@pet.Kind</div>
+                        </div>
+                        <div class="col-md-2 themed-grid-col">
+                            <button class="btn btn-success btn-sm" type="button">Edit</button>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-muted">This friend has no pets.</p>
+            }
+        }
+        else if (Model.ViewType == "quotes")
+        {
+            @if (Model.Quotes.Any())
+            {
+                @foreach (var quote in Model.Quotes)
+                {
+                    <div class="row mb-2 text-center">
+                        <div class="col-md-10 themed-grid-col">
+                            <strong>"@quote.QuoteText"</strong>
+                            <div class="text-muted small">- @quote.Author</div>
+                        </div>
+                        <div class="col-md-2 themed-grid-col">
+                            <button class="btn btn-success btn-sm" type="button">Edit</button>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-muted">This friend has no quotes.</p>
+            }
+        }
+    }
+</div>

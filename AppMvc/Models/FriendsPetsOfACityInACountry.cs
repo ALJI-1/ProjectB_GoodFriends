@@ -10,12 +10,12 @@ using Services.Interfaces;
 
 namespace AppMvc.Models
 {
-    public class FriendsPetsOfACityInACountryModel
+    public class CityOverviewModel
     {
          public string Country { get; set; }
         public string City { get; set; }
         public int NrFriends { get; set; }
         public int NrPets { get; set; }
-        public List<FriendsPetsOfACityInACountryModel> CityInfoList { get; set; }
+        public List<CityOverviewModel> CityInfoList { get; set; }
     }
 }

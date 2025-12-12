@@ -40,7 +40,7 @@ namespace AppRazor.Pages.Friends
                 }
                 await _admin_service.SeedAsync(NrOfItemsToSeed);
 
-                return RedirectToPage("/Friends/ModelListModel");
+                return RedirectToPage("/Friends/FriendsListModel");
             }
             return Page();
         }

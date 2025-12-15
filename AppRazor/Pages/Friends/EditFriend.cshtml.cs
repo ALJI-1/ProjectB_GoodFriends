@@ -10,6 +10,8 @@ using Services;
 using System.Security.Cryptography;
 using Services.Interfaces;
 using Models.Interfaces;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace AppRazor.Pages
@@ -29,6 +31,11 @@ namespace AppRazor.Pages
         //public member becomes part of the Model in the Razor page
         public string ErrorMessage { get; set; } = null;
 
+        public bool HasValidationErrors { get; set; }
+        public IEnumerable<string> ValidationErrorMsgs { get; set; }
+        public IEnumerable<KeyValuePair<string, ModelStateEntry>> InvalidKeys { get; set; }
+
+
         //Will execute on a Get request
         public async Task<IActionResult> OnGet()
         {
@@ -39,14 +46,14 @@ namespace AppRazor.Pages
                     //Use the Service and populate the InputModel
                     var response = await _service.ReadFriendAsync(_id, false);
                     FriendIM = new BestFriendIM(response.Item);
-                    PageHeader = "Edit details of a quote";
+                    PageHeader = "Edit details of a friend";
                 }
                 else
                 {
                     //Create an empty InputModel
                     FriendIM = new BestFriendIM();
                     FriendIM.StatusIM = StatusIM.Inserted;
-                    PageHeader = "Create a new quote";
+                    PageHeader = "Create a new friend";
                 }
             }
             catch (Exception e)
@@ -61,12 +68,21 @@ namespace AppRazor.Pages
             //Use the Service and populate the InputModel
             var response = await _service.ReadFriendAsync(FriendIM.FriendId, false);
             FriendIM = new BestFriendIM(response.Item);
-            PageHeader = "Edit details of a quote";
+            PageHeader = "Edit details of a friend";
             return Page();
         }
 
         public async Task<IActionResult> OnPostSave()
         {
+            //PageHeader is stored in TempData which has to be set after a Post
+            PageHeader = (FriendIM.StatusIM == StatusIM.Inserted) ?
+                "Create a new friend" : "Edit details of a friend";
+
+            if (!IsValid())
+            {
+                //The page is not valid
+                return Page();
+            }
             if (FriendIM.StatusIM == StatusIM.Inserted)
             {
                 //It is an create
@@ -85,8 +101,8 @@ namespace AppRazor.Pages
                 FriendIM = new BestFriendIM(updateResponse.Item);
             }
 
-            PageHeader = "Edit details of a quote";
-            return Page();
+            PageHeader = "Edit details of a friend";
+            return Redirect("FriendsList");
         }
 
 
@@ -111,8 +127,14 @@ namespace AppRazor.Pages
 
             //Properties from Model which is to be edited in the <form>
             public Guid FriendId { get; init; } = Guid.NewGuid();
+            
+            [Required(ErrorMessage = "You must provide a first name")]
             public string FirstName { get; set; }
+
+            [Required(ErrorMessage = "You must provide a last name")]
             public string LastName { get; set; }
+            
+            [Required(ErrorMessage = "You must provide an email")]
             public string Email { get; set; }
 
 
@@ -151,5 +173,20 @@ namespace AppRazor.Pages
             #endregion
         }
         #endregion
+        private bool IsValid(string[] validateOnlyKeys = null)
+        {
+            InvalidKeys = ModelState
+               .Where(s => s.Value.ValidationState == ModelValidationState.Invalid);
+
+            if (validateOnlyKeys != null)
+            {
+                InvalidKeys = InvalidKeys.Where(s => validateOnlyKeys.Any(vk => vk == s.Key));
+            }
+
+            ValidationErrorMsgs = InvalidKeys.SelectMany(e => e.Value.Errors).Select(e => e.ErrorMessage);
+            HasValidationErrors = InvalidKeys.Any();
+
+            return !HasValidationErrors;
+        }
     }
 }

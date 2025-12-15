@@ -22,10 +22,7 @@ namespace AppRazor.Pages.Friends
             try
             {
                 Guid _id = Guid.Parse(id);
-                //Read a QueryParameter
-                //Guid _id = Guid.Parse(Request.Query["id"]);
 
-                //Use the Service
                 var response = await _friendService.ReadFriendAsync(_id, false);
                 Friend = response.Item;
             }

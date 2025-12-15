@@ -10,6 +10,8 @@ using Services;
 using System.Security.Cryptography;
 using Services.Interfaces;
 using Models.Interfaces;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace AppRazor.Pages
@@ -31,9 +33,11 @@ namespace AppRazor.Pages
         public Guid FriendId { get; set; }
 
         public string PageHeader { get; set; }
-
-        //public member becomes part of the Model in the Razor page
         public string ErrorMessage { get; set; } = null;
+
+        public bool HasValidationErrors { get; set; }
+        public IEnumerable<string> ValidationErrorMsgs { get; set; }
+        public IEnumerable<KeyValuePair<string, ModelStateEntry>> InvalidKeys { get; set; }
 
         //Will execute on a Get request
         public async Task<IActionResult> OnGet()
@@ -78,15 +82,21 @@ namespace AppRazor.Pages
 
         public async Task<IActionResult> OnPostSave()
         {
+            PageHeader = (AddressIM.StatusIM == StatusIM.Inserted) ?
+                "Create a new address" : "Edit details of a address";
+
+            if (!IsValid())
+            {
+                //The page is not valid
+                return Page();
+            }
             if (AddressIM.StatusIM == StatusIM.Inserted)
             {
                 try {
 
-                
-                //It is an create
-                var dto = AddressIM.ToDto();
-                var response = await _addressesService.CreateAddressAsync(dto);
-                AddressIM = new FineAddressIM(response.Item);
+                    var dto = AddressIM.ToDto();
+                    var response = await _addressesService.CreateAddressAsync(dto);
+                    AddressIM = new FineAddressIM(response.Item);
                 }
                 catch (ArgumentException ex){
                     var existingId = Guid.Parse(ex.Message.Split("id ")[1]);
@@ -123,8 +133,7 @@ namespace AppRazor.Pages
                 }
             }
 
-            PageHeader = "Edit details of a address";
-            return Page();
+            return RedirectToPage("/Friends/ModelView", new { id = FriendId });
         }
 
 
@@ -142,9 +151,17 @@ namespace AppRazor.Pages
 
             //Properties from Model which is to be edited in the <form>
             public Guid AddressId { get; init; } = Guid.NewGuid();
+
+            [Required(ErrorMessage = "You must provide a street address")]
             public string StreetAddress { get; set; }
+
+            [Required(ErrorMessage = "You must provide a zip code")]
             public int ZipCode { get; set; }
+
+            [Required(ErrorMessage = "You must provide a city")]
             public string City { get; set; }
+
+            [Required(ErrorMessage = "You must provide a country")]
             public string Country { get; set; }
 
 
@@ -187,5 +204,20 @@ namespace AppRazor.Pages
             #endregion
         }
         #endregion
+        private bool IsValid(string[] validateOnlyKeys = null)
+        {
+            InvalidKeys = ModelState
+               .Where(s => s.Value.ValidationState == ModelValidationState.Invalid);
+
+            if (validateOnlyKeys != null)
+            {
+                InvalidKeys = InvalidKeys.Where(s => validateOnlyKeys.Any(vk => vk == s.Key));
+            }
+
+            ValidationErrorMsgs = InvalidKeys.SelectMany(e => e.Value.Errors).Select(e => e.ErrorMessage);
+            HasValidationErrors = InvalidKeys.Any();
+
+            return !HasValidationErrors;
+        }
     }
 }

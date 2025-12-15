@@ -8,18 +8,12 @@
 
 <div class="container px-4 py-4" id="view-group">
     <form class="needs-validation" novalidate>
-        <h2 class="pb-2 border-bottom">
-            View details of a Friend
-
-            <!-- Without Validation -->
-            
-                <a asp-page="EditFriend" asp-route-id=@Model.Friend?.FriendId >
-                    
-                <svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#edit" /></svg>
-                </a>
-           
-
-        </h2>
+        <div class="d-flex align-items-center pb-2 border-bottom mb-3">
+            <a asp-page="EditFriend" asp-route-id=@Model.Friend?.FriendId class="btn btn-outline-primary me-3">
+                <svg class="bi" width="1.5em" height="1.5em"><use xlink:href="#edit" /></svg>
+            </a>
+            <h2 class="mb-0">View details of a Friend</h2>
+        </div>
 
         @if (Model.ErrorMessage != null)
         {
@@ -62,12 +56,12 @@
                         </div>
 
                         <div class="col-sm-12">
-                            <label class="form-label">Address
-                                <a asp-page="EditAddress" asp-route-id=@Model.Friend?.FriendId >                   
-                                <svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#edit" /></svg>
+                            <div class="d-flex align-items-center mb-2">
+                                <a asp-page="EditAddress" asp-route-id=@Model.Friend?.FriendId class="btn btn-outline-primary me-3">
+                                    <svg class="bi" width="1.5em" height="1.5em"><use xlink:href="#edit" /></svg>
                                 </a>
-
-                            </label>
+                                <label class="form-label mb-0">Address</label>
+                            </div>
                             <input type="text" class="form-control mb-2" id="friendStreet" placeholder="Street Address" value="@(Model.Friend?.Address?.StreetAddress ?? "")" readonly>                           
                             <div class="row g-2">
                                 <div class="col-sm-6">

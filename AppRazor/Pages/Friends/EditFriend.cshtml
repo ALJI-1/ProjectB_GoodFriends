@@ -36,22 +36,37 @@
         }
         else
         {
+            <!-- Server side validation errors, rough but just in case client side validation is not working or tampered with -->
+            @if (Model.HasValidationErrors)
+            {
+                <div class="row g-3">
+                    @foreach (var item in Model.ValidationErrorMsgs)
+                    {
+                        <span class="alert alert-danger" role="alert">
+                            @item
+                        </span>
+                    }
+                </div>
+            }
             <div class="row row-cols-1 row-cols-lg-4 align-items-stretch g-4 py-5">
                 <div class="col-md-7 col-lg-10">
                     <div class="row g-3">
                         <div class="col-sm-6">
                             <label for="firstName" class="form-label">First name</label>
                             <input type="text" class="form-control" asp-for="FriendIM.FirstName" id="firstName" value="@Model.FriendIM.FirstName">
+                            <span asp-validation-for="FriendIM.FirstName" class="invalid-feedback"></span>
                         </div>
                         <div class="col-sm-6">
                         </div>
                         <div class="col-sm-12">
                             <label for="lastName" class="form-label">Last name</label>
-                            <input type="text" class="form-control" asp-for="FriendIM.LastName" id="lastName" value="@Model.FriendIM.LastName">
+                            <input type="text" class="form-control" asp-for="FriendIM.LastName" id="lastName" value="@Model.FriendIM.LastName">                           
+                            <span asp-validation-for="FriendIM.LastName" class="invalid-feedback"></span>
                         </div>
                         <div class="col-sm-12">
                             <label for="email" class="form-label">Email</label>
                             <input type="text" class="form-control" asp-for="FriendIM.Email" id="email" value="@Model.FriendIM.Email">
+                            <span asp-validation-for="FriendIM.Email" class="invalid-feedback"></span>
                         </div>
                     </div>
                 </div>
@@ -92,5 +107,7 @@
     </div>
 </div>
 
-
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
 

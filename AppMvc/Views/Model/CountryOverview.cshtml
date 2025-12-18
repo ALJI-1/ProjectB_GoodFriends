@@ -1,0 +1,62 @@
+﻿@page
+@model CountryOverviewModel
+@{
+}
+
+<!-- Page web-api-info -->
+<div class="container px-4 py-4" id="webapi-info">
+    <h2 class="pb-2 border-bottom">Country Overview</h2>
+    <p>Below you see an overview of friends by country.</p>
+
+    @foreach (var item in Model.CountryInfo)
+    {
+        <div class="row mb-2 text-center">
+            <div class="col-md-10 themed-grid-col">
+                <strong>@item.Country</strong>
+                <div class="text-muted small">Friends: @item.NrFriends</div>
+            </div>
+            <div class="col-md-2 themed-grid-col">
+                <a asp-page="FriendsInACountry" asp-route-filter="@item.Country" class="btn btn-success btn-sm" type="button">View</a>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Backuo page -->
+<div class="container px-4 py-4 d-none" id="webapi-info">
+    <h2 class="pb-2 border-bottom">WebApi info</h2>
+    <p>Below you see an overview of the content presented by the WebApi. Click on the link to see details. </p>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4 py-5">
+    <div class="col d-flex align-items-start">
+        <svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#boombox"/></svg>
+        <div>
+        <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Music groups</h3>
+        <p>253 music groups</p>
+        <a href="#list-of-items" class="btn btn-primary">
+            See details
+        </a>    
+        </div>
+    </div>
+    <div class="col d-flex align-items-start">
+        <svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#album"/></svg>
+        <div>
+        <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Albums</h3>
+        <p>1050 albums</p>
+        <a href="#list-of-items" class="btn btn-primary">
+            See details
+        </a>    
+        </div>
+    </div>
+    <div class="col d-flex align-items-start">
+        <svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#artist"/></svg>
+        <div>
+        <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Artists</h3>
+        <p>135 Artists</p>
+        <a href="#list-of-items" class="btn btn-primary">
+            See details
+        </a>    
+        </div>
+    </div>
+    </div>
+</div>

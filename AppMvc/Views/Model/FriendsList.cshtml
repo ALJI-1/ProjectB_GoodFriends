@@ -1,0 +1,67 @@
+﻿@page
+@model AppMvc
+@{
+    ViewData["Title"] = "Study ModelList";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@attribute [IgnoreAntiforgeryToken]
+<div id="list-of-friends">
+    <h2 class="pb-2 border-bottom">List of friends</h2>
+
+    <p>Below are some friends with their details. Select one that you want to view.</p>
+    @foreach (var item in Model.Friends)
+    {
+        <div class="row mb-2 text-center">
+            <div class="col-md-10 themed-grid-col">
+                <strong>@item.FirstName @item.LastName</strong>
+                <div class="text-end fst-italic">@item.Email</div>
+                <div class="text-muted small">@item.FriendId</div>
+            </div>
+            <div class="col-md-2 themed-grid-col">
+                <a asp-page="ModelView" asp-route-id=@item.FriendId class="btn btn-success btn-sm" type="button">View</a>
+                <a asp-page="EditFriend" asp-route-id=@item.FriendId class="btn btn-success btn-sm" type="button">Edit</a>
+            </div>
+        </div>
+    }
+    <nav aria-label="Standard pagination example" class="mt-4 mb-5">
+        <ul class="pagination">
+            <li class="page-item">
+                <a class="page-link" asp-page="FriendsListModel" asp-route-pagenr="@Model.PrevPageNr" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            @{
+                int startPage = Math.Max(0, Model.ThisPageNr - 1);
+                int endPage = Math.Min(Model.PresentPages - 1, Model.ThisPageNr + 1);
+            }
+            @for (int i = startPage; i <= endPage; i++)
+            {
+                <li class="page-item @(i == Model.ThisPageNr ? "active" : "")">
+                    <a class="page-link" asp-page="FriendsListModel" asp-route-pagenr="@i">@(i+1)</a>
+                </li>
+            }
+            <li class="page-item">
+                <a class="page-link" asp-page="FriendsListModel" asp-route-pagenr="@Model.NextPageNr" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- inital template that can be easily hidden -->
+    <div class="d-none">
+        <h2 class="pb-2 border-bottom">TEMPLATE</h2>
+        <div class="row mb-2 text-center">
+            <div class="col-md-10 themed-grid-col">
+                Before you marry a person, you should first make them use a computer with slow Internet to see who they really are.
+                <div class="col-md-16  text-end">Will Ferrell</div>
+            </div>
+            <div class="col-md-2 themed-grid-col">
+                <a href="#" class="btn btn-success btn-sm" type="button">View</a>
+            </div>
+        </div>
+    </div>
+</div>
+      
+
+

@@ -12,6 +12,7 @@ using Services.Interfaces;
 using Models.Interfaces;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
+using Models.Common;
 
 
 namespace AppRazor.Pages
@@ -118,7 +119,6 @@ namespace AppRazor.Pages
         //that are bound to the <form> tag
         //EVERY property must be bound to an <input> tag in the <form>
         //These classes are in center of ModelBinding and Validation
-        public enum StatusIM { Unknown, Unchanged, Inserted, Modified, Deleted }
 
         public class BestFriendIM
         {

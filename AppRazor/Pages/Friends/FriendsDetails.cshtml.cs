@@ -2,6 +2,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using Models.Common;
 using Models.Interfaces;
 using Services.Interfaces;
 
@@ -9,7 +10,6 @@ namespace AppRazor.Pages.Friends
 {
     public class FriendsDetailsModel(IFriendsService friendsService, IPetsService petsService, IQuotesService quotesService) : PageModel
     {
-         public enum StatusIM { Unknown, Unchanged, Inserted, Modified, Deleted}
         private readonly IFriendsService _friendsService = friendsService;
         private readonly IPetsService _petService = petsService;
         private readonly IQuotesService _quoteService = quotesService;

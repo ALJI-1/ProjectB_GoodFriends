@@ -1,0 +1,89 @@
+﻿@page
+@model AppRazor.Pages.Friends.FriendsInACountryModel
+@{
+    ViewData["Title"] = "All Friends In A Country";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@attribute [IgnoreAntiforgeryToken]
+
+<div>
+    <form method="get" asp-page="FriendsInACountry">
+        <div class="row mb-2 text-center">
+            <div class="col-md-10 themed-grid-col">
+                <label for="countries" class="form-label">Select country</label>
+                <select asp-for="SelectedCountry" asp-items="Html.GetEnumSelectList<AppRazor.Pages.Friends.Countries>()" class="form-control" id="countries" name="filter">
+                    <option value="">Pick one</option>
+                </select>
+            </div>
+            <div class="col-md-2 themed-grid-col">
+                <button class="btn btn-success btn-sm" type="submit">Submit</button>
+            </div>
+        </div>
+    </form>
+    @if (!Model.SelectedCountry.HasValue || string.IsNullOrEmpty(Model.Filter))
+    {
+        <div class="alert alert-warning" role="alert">
+            Please select a country to view friends.
+        </div>
+    }
+    else{
+    <div id="webapi-info">
+    <h2 class="pb-2 border-bottom">Cities in @Model.Filter</h2>
+
+    @foreach (var item in Model.CityInfoList)
+    {
+        <div class="row mb-2 text-center">
+            <div class="col-md-10 themed-grid-col">
+                <strong>@item.City</strong>
+                <div class="text-muted small">Friends: @item.NrFriends - Pets: @item.NrPets</div>
+            </div>
+            <div class="col-md-2 themed-grid-col">
+                <a asp-page="FriendsInACity" asp-route-city="@item.City" asp-route-country="@item.Country" class="btn btn-success btn-sm" type="button">View</a>
+            </div>
+        </div>
+    }
+
+    <h2 class="pb-2 border-bottom">All Friends In @Model.Filter</h2>
+
+    @foreach (var friend in Model.Friends)
+    {
+        <div class="row mb-2 text-center">
+            <div class="col-md-10 themed-grid-col">
+                <strong>@friend.FirstName @friend.LastName</strong>
+                <div class="text-end fst-italic">@friend.Email</div>
+                <div class="text-muted small">@friend.FriendId</div>
+            </div>
+            <div class="col-md-2 themed-grid-col">
+                <a asp-page="ModelView" asp-route-id=@friend.FriendId class="btn btn-success btn-sm" type="button">View</a>
+                
+                <a asp-page="EditFriend" asp-route-id=@friend.FriendId class="btn btn-success btn-sm" type="button">Edit</a>
+            </div>
+        </div>
+    }
+    <nav aria-label="Standard pagination example" class="mt-4 mb-5">
+        <ul class="pagination">
+            <li class="page-item">
+                <a class="page-link" asp-page="FriendsInACountry" asp-route-pagenr="@Model.PrevPageNr" asp-route-filter="@Model.Filter" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            @{
+                int startPage = Math.Max(0, Model.ThisPageNr - 1);
+                int endPage = Math.Min(Model.PresentPages - 1, Model.ThisPageNr + 1);
+            }
+            @for (int i = startPage; i <= endPage; i++)
+            {
+                <li class="page-item @(i == Model.ThisPageNr ? "active" : "")">
+                    <a class="page-link" asp-page="FriendsInACountry" asp-route-pagenr="@i" asp-route-filter="@Model.Filter">@(i+1)</a>
+                </li>
+            }
+            <li class="page-item">
+                <a class="page-link" asp-page="FriendsInACountry" asp-route-pagenr="@Model.NextPageNr" asp-route-filter="@Model.Filter" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    
+</div>
+}

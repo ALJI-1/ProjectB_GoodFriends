@@ -1,0 +1,63 @@
+using System.ComponentModel.DataAnnotations;
+using Models.DTO;
+using Models.Interfaces;
+using Models.Common;
+
+
+namespace AppMvc.Pages
+{
+    public class BestFriendIM
+    {
+        //Status of InputModel
+        public StatusIM StatusIM { get; set; }
+
+        //Properties from Model which is to be edited in the <form>
+        public Guid FriendId { get; init; } = Guid.NewGuid();
+        
+        [Required(ErrorMessage = "You must provide a first name")]
+        public string FirstName { get; set; }
+
+        [Required(ErrorMessage = "You must provide a last name")]
+        public string LastName { get; set; }
+        
+        [Required(ErrorMessage = "You must provide an email")]
+        public string Email { get; set; }
+
+
+        public BestFriendIM() { StatusIM = StatusIM.Unchanged; }
+
+        //Copy constructor
+        public BestFriendIM(BestFriendIM original)
+        {
+            StatusIM = original.StatusIM;
+            FriendId = original.FriendId;
+            FirstName = original.FirstName;
+            LastName = original.LastName;       
+            Email = original.Email;
+        }
+
+        public BestFriendIM(IFriend original)
+        {
+            StatusIM = StatusIM.Unchanged;
+            FriendId = original.FriendId;
+            FirstName = original.FirstName;
+            LastName = original.LastName;       
+            Email = original.Email;
+        }
+
+        public FriendCuDto ToDto()
+        {
+            return new FriendCuDto
+            {
+                FriendId = FriendId,
+                FirstName = FirstName,
+                LastName = LastName,
+                Email = Email
+            };
+        }
+    }
+
+}
+
+    
+

@@ -7,7 +7,7 @@ using Models.Interfaces;
 using Services;
 using Services.Interfaces;
 
-namespace AppMvc.Models
+namespace AppRazor.Pages.Friends
 {
     public class ModelViewModel(IFriendsService friendsService) : PageModel
     {
@@ -22,10 +22,7 @@ namespace AppMvc.Models
             try
             {
                 Guid _id = Guid.Parse(id);
-                //Read a QueryParameter
-                //Guid _id = Guid.Parse(Request.Query["id"]);
 
-                //Use the Service
                 var response = await _friendService.ReadFriendAsync(_id, false);
                 Friend = response.Item;
             }

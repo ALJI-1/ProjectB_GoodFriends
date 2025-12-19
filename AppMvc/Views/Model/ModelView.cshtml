@@ -7,15 +7,12 @@
 
 <div class="container px-4 py-4" id="view-group">
     <form class="needs-validation" novalidate>
-        <h2 class="pb-2 border-bottom">
-            View details of a Friend
-
-            <!-- Without Validation -->
-            <a href="~/Studies/FormEdit/InputModelSimple?id=@Model.Friend?.FriendId">
-                <svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#edit" /></svg>
+        <div class="d-flex align-items-center pb-2 border-bottom mb-3">
+            <a asp-page="EditFriend" asp-route-id=@Model.Friend?.FriendId class="btn btn-outline-primary me-3">
+                <svg class="bi" width="1.5em" height="1.5em"><use xlink:href="#edit" /></svg>
             </a>
-
-        </h2>
+            <h2 class="mb-0">View details of a Friend</h2>
+        </div>
 
         @if (Model.ErrorMessage != null)
         {
@@ -40,13 +37,40 @@
                             <label for="friendName" class="form-label">Friend Name</label>
                             <input type="text" class="form-control" id="friendName" value="@Model.Friend?.FirstName @Model.Friend?.LastName" readonly>
                         </div>
+
                         <div class="col-sm-12">
                             <label for="friendPets" class="form-label">Friends Pets</label>
-                            <input type="text" class="form-control" id="friendPets" value="@Model.Friend?.Pets.Count" readonly>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="friendPets" value="@(Model.Friend?.Pets?.Count ?? 0)" readonly>
+                                <a asp-page="FriendsDetails" asp-route-id="@Model.Friend?.FriendId" asp-route-view="pets" class="btn btn-success btn-sm" type="button">View</a>
+                            </div>  
                         </div>
+
                         <div class="col-sm-12">
-                            <label for="friendCountry" class="form-label">Country</label>
-                            <input type="text" class="form-control" id="friendCountry" value="@Model.Friend?.Address" readonly>
+                            <label for="friendQuotes" class="form-label">Friends Quotes</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="friendQuotes" value="@(Model.Friend?.Quotes?.Count ?? 0)" readonly>
+                                <a asp-page="FriendsDetails" asp-route-id="@Model.Friend?.FriendId" asp-route-view="quotes" class="btn btn-success btn-sm" type="button">View</a>
+                            </div>                            
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="d-flex align-items-center mb-2">
+                                <a asp-page="EditAddress" asp-route-id=@Model.Friend?.FriendId class="btn btn-outline-primary me-3">
+                                    <svg class="bi" width="1.5em" height="1.5em"><use xlink:href="#edit" /></svg>
+                                </a>
+                                <label class="form-label mb-0">Address</label>
+                            </div>
+                            <input type="text" class="form-control mb-2" id="friendStreet" placeholder="Street Address" value="@(Model.Friend?.Address?.StreetAddress ?? "")" readonly>                           
+                            <div class="row g-2">
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="friendZip" placeholder="Zip Code" value="@(Model.Friend?.Address?.ZipCode ?? null)" readonly>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="friendCity" placeholder="City" value="@(Model.Friend?.Address?.City ?? "")" readonly>
+                                </div>
+                            </div>
+                            <input type="text" class="form-control mt-2" id="friendCountry" placeholder="Country" value="@(Model.Friend?.Address?.Country ?? "")" readonly>
                         </div>
                     </div>
 

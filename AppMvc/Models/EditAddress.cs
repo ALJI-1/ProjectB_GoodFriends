@@ -1,24 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Models.DTO;
-using Models;
-using Services;
-using System.Security.Cryptography;
-using Services.Interfaces;
-using Models.Interfaces;
+﻿using Models.Interfaces;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System.ComponentModel.DataAnnotations;
-using Models.Common;
-using DbModels;
-
 
 namespace AppMvc.Models
 {
-    //Demonstrate how to read Query parameters
     public class EditAddressViewModel
     {
         public FineAddressIM AddressIM { get; set; } = new();

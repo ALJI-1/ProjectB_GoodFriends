@@ -2,7 +2,7 @@ using Models.Interfaces;
 
 namespace AppMvc.Models
 {
-    public class FriendsListModel
+    public class FriendsListViewModel
     {
         public List<IFriend> Friends { get; set; } = new List<IFriend>();
 

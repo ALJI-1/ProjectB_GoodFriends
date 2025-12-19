@@ -9,7 +9,7 @@ using Services.Interfaces;
 
 namespace AppMvc.Models
 {
-    public class AllFriendsInACountryModel
+    public class AllFriendsInACountryViewModel
     {
         public List<IFriend> Friends {get; set;} = new List<IFriend>();
     }

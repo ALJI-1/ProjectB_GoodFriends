@@ -1,5 +1,4 @@
-﻿@page
-@model AppRazor.Pages.Friends.FriendsInACountryModel
+﻿@model FriendsInACountryViewModel
 @{
     ViewData["Title"] = "All Friends In A Country";
 }
@@ -11,7 +10,7 @@
         <div class="row mb-2 text-center">
             <div class="col-md-10 themed-grid-col">
                 <label for="countries" class="form-label">Select country</label>
-                <select asp-for="SelectedCountry" asp-items="Html.GetEnumSelectList<AppRazor.Pages.Friends.Countries>()" class="form-control" id="countries" name="filter">
+                <select asp-for="SelectedCountry" asp-items="Html.GetEnumSelectList<AppMvc.Models.Countries>()" class="form-control" id="countries" name="filter">
                     <option value="">Pick one</option>
                 </select>
             </div>

@@ -2,7 +2,7 @@ using Models.DTO;
 
 namespace AppMvc.Models
 {
-    public class OverviewModel
+    public class OverviewViewModel
     {
         public IEnumerable<GstUsrInfoFriendsDto> CountryInfo { get; set; }
     }

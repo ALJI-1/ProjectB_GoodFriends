@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Services.Interfaces;
 
-namespace AppRazor.Pages.Friends
+namespace AppMvc.Models
 {
-    public class SeedModel : PageModel
+    public class SeedViewModel : PageModel
     {
         //Just like for WebApi
         readonly IAdminService _admin_service;
-        readonly ILogger<SeedModel> _logger;
+        readonly ILogger<SeedViewModel> _logger;
 
         public int NrOfGroups => nrOfFriends().Result;
         private async Task<int> nrOfFriends()
@@ -46,7 +46,7 @@ namespace AppRazor.Pages.Friends
         }
 
         //Inject services just like in WebApi
-        public SeedModel(IAdminService admin_service, ILogger<SeedModel> logger)
+        public SeedViewModel(IAdminService admin_service, ILogger<SeedViewModel> logger)
         {
             _admin_service = admin_service;
             _logger = logger;

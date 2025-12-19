@@ -19,7 +19,7 @@
             <button class="btn btn-primary-outline" type="submit" asp-page-handler="Save">
                 <svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#save" /></svg>
             </button>
-            @if (Model.AddressIM.StatusIM != AppRazor.Pages.EditAddressModel.StatusIM.Inserted)
+            @if (Model.AddressIM.StatusIM != Models.Common.StatusIM.Inserted)
             {
                 <button class="btn btn-primary-outline" type="submit" asp-page-handler="Undo">
                     <svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#undo" /></svg>

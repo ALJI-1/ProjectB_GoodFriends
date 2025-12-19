@@ -5,9 +5,7 @@ using Services;
 using Services.Interfaces;
 using Models.Interfaces;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using AppRazor.Pages.Friends;
 using Models.DTO;
-using AppRazor.Pages;
 using Models.Common;
 
 namespace AppMvc.Controllers;
@@ -131,18 +129,60 @@ public class AddressController : Controller
     }
 
     [HttpGet]
-    public async Task <IActionResult> AllFriendsInACountry()
+    public async Task <IActionResult> AllFriendsInACountry(string pagenr, string filter)
     {
-        var info = await _addressesService.ReadAddressesAsync(true, false, null, 0, 10);
+        var vm = new FriendsInACountryViewModel();
+        if (!string.IsNullOrEmpty(filter) && Enum.TryParse<Countries>(filter, true, out var country))
+            {
+                vm.SelectedCountry = country;
+                vm.Filter = country.ToString();
+            }
+            else
+            {
+                vm.Filter = filter ?? "";
+            }
+            
+            if (int.TryParse(pagenr, out int _pagenr))
+            {
+                ThisPageNr = _pagenr;
+            }
+            var info = await _adminService.GuestInfoAsync();
 
-        var friends = info.PageItems.SelectMany(a => a.Friends).Where(c => c.Address.Country == "Sweden").ToList();
+            var friends = info.Item.Friends.Where(i => i.Country == vm.Filter && !string.IsNullOrEmpty(i.City));
+            var pets = info.Item.Pets.Where(i => i.Country == vm.Filter && !string.IsNullOrEmpty(i.City));
 
-        var model = new AllFriendsInACountryModel
-        {
-            Friends = friends
-        };
+            vm.CityInfoList = friends.Select(f => new CityInfo
+            {
+                Country = f.Country,
+                City = f.City,
+                NrFriends = f.NrFriends,
+                NrPets = pets.FirstOrDefault(p => p.City == f.City && p.Country == f.Country)?.NrPets ?? 0
+            });
 
-        return View(model);
+
+            // Get all addresses (use a large page size to get all)
+            var addressinfo = await _addressesService.ReadAddressesAsync(true, false, null, 0, 1000);
+
+            // Filter friends whose address is in the selected country
+            var allFriends = addressinfo.PageItems
+                .SelectMany(a => a.Friends)
+                .Where(f => f.Address?.Country == vm.Filter)
+                .ToList();
+
+            // Calculate pagination
+            NrOfPages = (int)Math.Ceiling(allFriends.Count / (double)PageSize);
+            ThisPageNr = Math.Min(ThisPageNr, NrOfPages - 1);
+            PrevPageNr = Math.Max(0, ThisPageNr - 1);
+            NextPageNr = Math.Min(NrOfPages - 1, ThisPageNr + 1);
+            PresentPages = NrOfPages;
+
+            // Get friends for current page
+            Friends = allFriends
+                .Skip(ThisPageNr * PageSize)
+                .Take(PageSize)
+                .ToList();
+
+            return View(vm); 
     }
 
     public async Task<IActionResult> Save(EditAddressViewModel vm)

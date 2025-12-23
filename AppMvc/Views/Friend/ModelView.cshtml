@@ -1,4 +1,4 @@
-﻿@model ModelViewModel
+@model ModelViewModel
 @{
     ViewData["Title"] = "ModelView";
 }
@@ -8,7 +8,7 @@
 <div class="container px-4 py-4" id="view-group">
     <form class="needs-validation" novalidate>
         <div class="d-flex align-items-center pb-2 border-bottom mb-3">
-            <a asp-page="EditFriend" asp-route-id=@Model.Friend?.FriendId class="btn btn-outline-primary me-3">
+            <a asp-controller="Friend" asp-action="EditFriend" asp-route-id="@Model.Friend?.FriendId" class="btn btn-outline-primary me-3">
                 <svg class="bi" width="1.5em" height="1.5em"><use xlink:href="#edit" /></svg>
             </a>
             <h2 class="mb-0">View details of a Friend</h2>
@@ -42,7 +42,7 @@
                             <label for="friendPets" class="form-label">Friends Pets</label>
                             <div class="input-group">
                                 <input type="text" class="form-control" id="friendPets" value="@(Model.Friend?.Pets?.Count ?? 0)" readonly>
-                                <a asp-page="FriendsDetails" asp-route-id="@Model.Friend?.FriendId" asp-route-view="pets" class="btn btn-success btn-sm" type="button">View</a>
+                                <a asp-controller="Friend" asp-action="FriendsDetails" asp-route-id="@Model.Friend?.FriendId" asp-route-view="pets" class="btn btn-success btn-sm" type="button">View</a>
                             </div>  
                         </div>
 
@@ -50,13 +50,13 @@
                             <label for="friendQuotes" class="form-label">Friends Quotes</label>
                             <div class="input-group">
                                 <input type="text" class="form-control" id="friendQuotes" value="@(Model.Friend?.Quotes?.Count ?? 0)" readonly>
-                                <a asp-page="FriendsDetails" asp-route-id="@Model.Friend?.FriendId" asp-route-view="quotes" class="btn btn-success btn-sm" type="button">View</a>
+                                <a asp-controller="Friend" asp-action="FriendsDetails" asp-route-id="@Model.Friend?.FriendId" asp-route-view="quotes" class="btn btn-success btn-sm" type="button">View</a>
                             </div>                            
                         </div>
 
                         <div class="col-sm-12">
                             <div class="d-flex align-items-center mb-2">
-                                <a asp-page="EditAddress" asp-route-id=@Model.Friend?.FriendId class="btn btn-outline-primary me-3">
+                                <a asp-controller="Friend" asp-action="EditAddress" asp-route-id="@Model.Friend?.FriendId" class="btn btn-outline-primary me-3">
                                     <svg class="bi" width="1.5em" height="1.5em"><use xlink:href="#edit" /></svg>
                                 </a>
                                 <label class="form-label mb-0">Address</label>
@@ -110,6 +110,3 @@
         </form>
     </div>
 </div>
-
-
-

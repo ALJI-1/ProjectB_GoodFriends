@@ -12,7 +12,7 @@ namespace AppMvc.Controllers;
 
 public class AddressController : Controller
 {
-    private readonly ILogger<ModelController> _logger;
+    private readonly ILogger<FriendController> _logger;
     readonly IAdminService _adminService;
     readonly IAddressesService _addressesService;
     readonly IFriendsService _friendService;
@@ -32,7 +32,7 @@ public class AddressController : Controller
     public int NextPageNr { get; set; } = 0;
     public int PresentPages { get; set; } = 0;
 
-    public AddressController(ILogger<ModelController> logger, IAddressesService addressesService, IAdminService adminService, IFriendsService friendsService)
+    public AddressController(ILogger<FriendController> logger, IAddressesService addressesService, IAdminService adminService, IFriendsService friendsService)
     {
         _addressesService = addressesService;
         _logger = logger;
@@ -129,7 +129,7 @@ public class AddressController : Controller
     }
 
     [HttpGet]
-    public async Task <IActionResult> AllFriendsInACountry(string pagenr, string filter)
+    public async Task <IActionResult> FriendsInACountry(string pagenr, string filter)
     {
         var vm = new FriendsInACountryViewModel();
         if (!string.IsNullOrEmpty(filter) && Enum.TryParse<Countries>(filter, true, out var country))
@@ -170,15 +170,15 @@ public class AddressController : Controller
                 .ToList();
 
             // Calculate pagination
-            NrOfPages = (int)Math.Ceiling(allFriends.Count / (double)PageSize);
-            ThisPageNr = Math.Min(ThisPageNr, NrOfPages - 1);
-            PrevPageNr = Math.Max(0, ThisPageNr - 1);
-            NextPageNr = Math.Min(NrOfPages - 1, ThisPageNr + 1);
-            PresentPages = NrOfPages;
+            vm.NrOfPages = (int)Math.Ceiling(allFriends.Count / (double)PageSize);
+            vm.ThisPageNr = Math.Min(ThisPageNr, vm.NrOfPages - 1);
+            vm.PrevPageNr = Math.Max(0, vm.ThisPageNr - 1);
+            vm.NextPageNr = Math.Min(vm.NrOfPages - 1, vm.ThisPageNr + 1);
+            vm.PresentPages = vm.NrOfPages;
 
             // Get friends for current page
-            Friends = allFriends
-                .Skip(ThisPageNr * PageSize)
+            vm.Friends = allFriends
+                .Skip(vm.ThisPageNr * PageSize)
                 .Take(PageSize)
                 .ToList();
 

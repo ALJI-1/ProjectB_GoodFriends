@@ -1,13 +1,13 @@
-﻿@model EditAddressViewModel
+@model EditAddressViewModel
 @{
-    ViewData["Title"] = "Study InputModelListSimple";
+    ViewData["Title"] = "Edit Address";
 }
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @attribute [IgnoreAntiforgeryToken]
 
 <!-- Page view-quote -->
 <div class="container px-4 py-4" id="view-group">
-    <form class="needs-validation" method="post" novalidate>
+    <form class="needs-validation" method="post" asp-controller="Address" asp-action="Save" novalidate>
         <!-- Hidden fields used to bind input model -->
         <input asp-for="FriendId" value="@Model.FriendId" type="hidden" />
         <input asp-for="AddressIM.AddressId" value="@Model.AddressIM.AddressId" type="hidden" />
@@ -15,12 +15,12 @@
  
         <h2 class="pb-2 border-bottom">
             @Model.PageHeader
-            <button class="btn btn-primary-outline" type="submit" asp-page-handler="Save">
+            <button class="btn btn-primary-outline" type="submit">
                 <svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#save" /></svg>
             </button>
             @if (Model.AddressIM.StatusIM != Models.Common.StatusIM.Inserted)
             {
-                <button class="btn btn-primary-outline" type="submit" asp-page-handler="Undo">
+                <button class="btn btn-primary-outline" type="submit" asp-action="Undo">
                     <svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#undo" /></svg>
                 </button>
             }
@@ -72,10 +72,10 @@
         <form class="needs-validation" method="post" novalidate>
             <h2 class="pb-2 border-bottom">
                 TEMPLATE
-                <button class="btn btn-primary-outline" type="submit" asp-page-handler="Save">
+                <button class="btn btn-primary-outline" type="submit">
                     <svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#save" /></svg>
                 </button>
-                <button class="btn btn-primary-outline" type="submit" asp-page-handler="Undo">
+                <button class="btn btn-primary-outline" type="submit">
                     <svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#undo" /></svg>
                 </button>
             </h2>
@@ -99,8 +99,7 @@
         </form>
     </div>
 </div>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
-
-

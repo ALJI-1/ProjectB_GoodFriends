@@ -1,4 +1,4 @@
-﻿@model FriendsInACountryViewModel
+@model FriendsInACountryViewModel
 @{
     ViewData["Title"] = "All Friends In A Country";
 }
@@ -6,7 +6,7 @@
 @attribute [IgnoreAntiforgeryToken]
 
 <div>
-    <form method="get" asp-page="FriendsInACountry">
+    <form method="get" asp-controller="Address" asp-action="FriendsInACountry">
         <div class="row mb-2 text-center">
             <div class="col-md-10 themed-grid-col">
                 <label for="countries" class="form-label">Select country</label>
@@ -37,7 +37,7 @@
                 <div class="text-muted small">Friends: @item.NrFriends - Pets: @item.NrPets</div>
             </div>
             <div class="col-md-2 themed-grid-col">
-                <a asp-page="FriendsInACity" asp-route-city="@item.City" asp-route-country="@item.Country" class="btn btn-success btn-sm" type="button">View</a>
+                <a asp-controller="Friend" asp-action="FriendsInACity" asp-route-city="@item.City" asp-route-country="@item.Country" class="btn btn-success btn-sm" type="button">View</a>
             </div>
         </div>
     }
@@ -53,16 +53,16 @@
                 <div class="text-muted small">@friend.FriendId</div>
             </div>
             <div class="col-md-2 themed-grid-col">
-                <a asp-page="ModelView" asp-route-id=@friend.FriendId class="btn btn-success btn-sm" type="button">View</a>
+                <a asp-controller="Friend" asp-action="ModelView" asp-route-id="@friend.FriendId" class="btn btn-success btn-sm" type="button">View</a>
                 
-                <a asp-page="EditFriend" asp-route-id=@friend.FriendId class="btn btn-success btn-sm" type="button">Edit</a>
+                <a asp-controller="Friend" asp-action="EditFriend" asp-route-id="@friend.FriendId" class="btn btn-success btn-sm" type="button">Edit</a>
             </div>
         </div>
     }
     <nav aria-label="Standard pagination example" class="mt-4 mb-5">
         <ul class="pagination">
             <li class="page-item">
-                <a class="page-link" asp-page="FriendsInACountry" asp-route-pagenr="@Model.PrevPageNr" asp-route-filter="@Model.Filter" aria-label="Previous">
+                <a class="page-link" asp-controller="Address" asp-action="FriendsInACountry" asp-route-pagenr="@Model.PrevPageNr" asp-route-filter="@Model.Filter" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
@@ -73,16 +73,15 @@
             @for (int i = startPage; i <= endPage; i++)
             {
                 <li class="page-item @(i == Model.ThisPageNr ? "active" : "")">
-                    <a class="page-link" asp-page="FriendsInACountry" asp-route-pagenr="@i" asp-route-filter="@Model.Filter">@(i+1)</a>
+                    <a class="page-link" asp-controller="Address" asp-action="FriendsInACountry" asp-route-pagenr="@i" asp-route-filter="@Model.Filter">@(i+1)</a>
                 </li>
             }
             <li class="page-item">
-                <a class="page-link" asp-page="FriendsInACountry" asp-route-pagenr="@Model.NextPageNr" asp-route-filter="@Model.Filter" aria-label="Next">
+                <a class="page-link" asp-controller="Address" asp-action="FriendsInACountry" asp-route-pagenr="@Model.NextPageNr" asp-route-filter="@Model.Filter" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
         </ul>
-    </nav>
-    
+    </div>
+    }
 </div>
-}

@@ -21,21 +21,18 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                    <ul class="navbar-nav flex-grow-1">               
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Friend" asp-action="FriendsList" class="nav-link">List of all Friends</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Address" asp-action="CountryOverview" class="nav-link">Country List</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Model" asp-action="Overview">Overview</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Address" asp-action="FriendsInACountry" class="nav-link">Country Overview</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Model" asp-action="CityOverview">CityOverview</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Model" asp-action="AllFriendsInACountry">AllFriendsInACountry</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Seed" class="nav-link">Seed Friends</a>
                         </li>
                     </ul>
                 </div>

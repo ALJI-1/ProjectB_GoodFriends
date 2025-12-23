@@ -12,9 +12,9 @@ using System.Linq;
 
 namespace AppMvc.Controllers;
 
-public class ModelController : Controller
+public class FriendController : Controller
 {
-    private readonly ILogger<ModelController> _logger;
+    private readonly ILogger<FriendController> _logger;
 
     readonly IQuotesService _quotesService;
     readonly IPetsService _petsService;
@@ -38,7 +38,7 @@ public class ModelController : Controller
     public string Country { get; set; } = string.Empty;
 
 
-    public ModelController(ILogger<ModelController> logger, IAddressesService addressesService, IAdminService adminService, IFriendsService friendsService, IPetsService petsService, IQuotesService quotesService)
+    public FriendController(ILogger<FriendController> logger, IAddressesService addressesService, IAdminService adminService, IFriendsService friendsService, IPetsService petsService, IQuotesService quotesService)
     {
         _addressesService = addressesService;
         _logger = logger;
@@ -62,11 +62,11 @@ public class ModelController : Controller
             var response = await _friendsService.ReadFriendsAsync(true, true, null, ThisPageNr, PageSize);
             model.Friends = response.PageItems;
 
-            NrOfPages = response.PageCount;
-            ThisPageNr = response.PageNr; 
-            PrevPageNr = Math.Max(0, ThisPageNr - 1);
-            NextPageNr = Math.Min(NrOfPages - 1, ThisPageNr + 1);
-            PresentPages = NrOfPages;
+            model.NrOfPages = response.PageCount;
+            model.ThisPageNr = response.PageNr; 
+            model.PrevPageNr = Math.Max(0, model.ThisPageNr - 1);
+            model.NextPageNr = Math.Min(model.NrOfPages - 1, model.ThisPageNr + 1);
+            model.PresentPages = model.NrOfPages;
 
         return View(model);
     }
@@ -84,11 +84,11 @@ public class ModelController : Controller
             var response = await _friendsService.ReadFriendsAsync(true, true, null, ThisPageNr, PageSize);
             model.Friends = response.PageItems;
 
-            NrOfPages = response.PageCount;
-            ThisPageNr = response.PageNr; 
-            PrevPageNr = Math.Max(0, ThisPageNr - 1);
-            NextPageNr = Math.Min(NrOfPages - 1, ThisPageNr + 1);
-            PresentPages = NrOfPages;
+            model.NrOfPages = response.PageCount;
+            model.ThisPageNr = response.PageNr; 
+            model.PrevPageNr = Math.Max(0, model.ThisPageNr - 1);
+            model.NextPageNr = Math.Min(model.NrOfPages - 1, model.ThisPageNr + 1);
+            model.PresentPages = model.NrOfPages;
 
         return View(model);
     }
@@ -185,7 +185,7 @@ public class ModelController : Controller
 
             // Filter friends whose address is in the selected city and country
             var allFriends = info.PageItems
-                .Where(a => a.City == City && a.Country == Country)
+                .Where(a => a.City == vm.City && a.Country == vm.Country)
                 .SelectMany(a => a.Friends)
                 .ToList();
 
@@ -195,15 +195,15 @@ public class ModelController : Controller
                 .ToList();
 
             // Calculate pagination
-            NrOfPages = (int)Math.Ceiling(allFriends.Count / (double)PageSize);
-            ThisPageNr = Math.Min(ThisPageNr, Math.Max(0, NrOfPages - 1));
-            PrevPageNr = Math.Max(0, ThisPageNr - 1);
-            NextPageNr = Math.Min(Math.Max(0, NrOfPages - 1), ThisPageNr + 1);
-            PresentPages = NrOfPages;
+            vm.NrOfPages = (int)Math.Ceiling(allFriends.Count / (double)PageSize);
+            vm.ThisPageNr = Math.Min(ThisPageNr, Math.Max(0, vm.NrOfPages - 1));
+            vm.PrevPageNr = Math.Max(0, vm.ThisPageNr - 1);
+            vm.NextPageNr = Math.Min(Math.Max(0, vm.NrOfPages - 1), vm.ThisPageNr + 1);
+            vm.PresentPages = vm.NrOfPages;
 
             // Get friends for current page
             vm.Friends = allFriends
-                .Skip(ThisPageNr * PageSize)
+                .Skip(vm.ThisPageNr * PageSize)
                 .Take(PageSize)
                 .ToList();
 

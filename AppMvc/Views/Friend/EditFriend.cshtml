@@ -1,4 +1,4 @@
-﻿@model EditFriendViewModel
+@model EditFriendViewModel
 @{
     ViewData["Title"] = "Study InputModelListSimple";
 }
@@ -7,19 +7,19 @@
 
 <!-- Page view-quote -->
 <div class="container px-4 py-4" id="view-group">
-    <form class="needs-validation" method="post" novalidate>
+    <form class="needs-validation" method="post" asp-controller="Friend" asp-action="Save" novalidate>
         <!-- Hidden fields used to bind input model -->
         <input asp-for="FriendIM.FriendId" value="@Model.FriendIM.FriendId" type="hidden" />
         <input asp-for="FriendIM.StatusIM" value="@Model.FriendIM.StatusIM" type="hidden" />
  
         <h2 class="pb-2 border-bottom">
             @Model.PageHeader
-            <button class="btn btn-primary-outline" type="submit" asp-page-handler="Save">
+            <button class="btn btn-primary-outline" type="submit">
                 <svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#save" /></svg>
             </button>
             @if (Model.FriendIM.StatusIM != Models.Common.StatusIM.Inserted)
             {
-                <button class="btn btn-primary-outline" type="submit" asp-page-handler="Undo">
+                <button class="btn btn-primary-outline" type="submit" asp-action="Undo">
                     <svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#undo" /></svg>
                 </button>
             }
@@ -78,10 +78,10 @@
         <form class="needs-validation" method="post" novalidate>
             <h2 class="pb-2 border-bottom">
                 TEMPLATE
-                <button class="btn btn-primary-outline" type="submit" asp-page-handler="Save">
+                <button class="btn btn-primary-outline" type="submit">
                     <svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#save" /></svg>
                 </button>
-                <button class="btn btn-primary-outline" type="submit" asp-page-handler="Undo">
+                <button class="btn btn-primary-outline" type="submit">
                     <svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#undo" /></svg>
                 </button>
             </h2>
@@ -109,4 +109,3 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
-

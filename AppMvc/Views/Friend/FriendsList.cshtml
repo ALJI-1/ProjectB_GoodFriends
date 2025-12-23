@@ -1,4 +1,4 @@
-﻿@model FriendsListViewModel
+@model FriendsListViewModel
 @{
     ViewData["Title"] = "Friends List";
 }
@@ -17,15 +17,15 @@
                 <div class="text-muted small">@item.FriendId</div>
             </div>
             <div class="col-md-2 themed-grid-col">
-                <a asp-page="ModelView" asp-route-id=@item.FriendId class="btn btn-success btn-sm" type="button">View</a>
-                <a asp-page="EditFriend" asp-route-id=@item.FriendId class="btn btn-success btn-sm" type="button">Edit</a>
+                <a asp-controller="Friend" asp-action="ModelView" asp-route-id="@item.FriendId" class="btn btn-success btn-sm" type="button">View</a>
+                <a asp-controller="Friend" asp-action="EditFriend" asp-route-id="@item.FriendId" class="btn btn-success btn-sm" type="button">Edit</a>
             </div>
         </div>
     }
     <nav aria-label="Standard pagination example" class="mt-4 mb-5">
         <ul class="pagination">
             <li class="page-item">
-                <a class="page-link" asp-page="FriendsListModel" asp-route-pagenr="@Model.PrevPageNr" aria-label="Previous">
+                <a class="page-link" asp-controller="Friend" asp-action="FriendsList" asp-route-pagenr="@Model.PrevPageNr" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
@@ -36,11 +36,11 @@
             @for (int i = startPage; i <= endPage; i++)
             {
                 <li class="page-item @(i == Model.ThisPageNr ? "active" : "")">
-                    <a class="page-link" asp-page="FriendsListModel" asp-route-pagenr="@i">@(i+1)</a>
+                    <a class="page-link" asp-controller="Friend" asp-action="FriendsList" asp-route-pagenr="@i">@(i+1)</a>
                 </li>
             }
             <li class="page-item">
-                <a class="page-link" asp-page="FriendsListModel" asp-route-pagenr="@Model.NextPageNr" aria-label="Next">
+                <a class="page-link" asp-controller="Friend" asp-action="FriendsList" asp-route-pagenr="@Model.NextPageNr" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
@@ -61,6 +61,3 @@
         </div>
     </div>
 </div>
-      
-
-

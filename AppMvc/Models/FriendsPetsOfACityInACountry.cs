@@ -1,21 +1,11 @@
-using System.IO.Compression;
-using DbRepos;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Models;
-using Models.DTO;
-using Models.Interfaces;
-using Services;
-using Services.Interfaces;
-
 namespace AppMvc.Models
 {
     public class CityOverviewModel
     {
-         public string Country { get; set; }
-        public string City { get; set; }
+        public string Country { get; set; } = string.Empty;
+        public string City { get; set; } = string.Empty;
         public int NrFriends { get; set; }
         public int NrPets { get; set; }
-        public List<CityOverviewModel> CityInfoList { get; set; }
+        public List<CityOverviewModel> CityInfoList { get; set; } = new List<CityOverviewModel>();
     }
 }

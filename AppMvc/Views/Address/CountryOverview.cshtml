@@ -5,7 +5,7 @@
     <h2 class="pb-2 border-bottom">Country Overview</h2>
     <p>Below you see an overview of friends by country.</p>
 
-    @foreach (var item in Model.CountryInfo)
+    @foreach (var item in Model.CountryInfo ?? [])
     {
         <div class="row mb-2 text-center">
             <div class="col-md-10 themed-grid-col">

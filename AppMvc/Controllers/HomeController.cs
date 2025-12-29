@@ -2,20 +2,15 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using AppMvc.Models;
 using Services.Interfaces;
-using System.ComponentModel.DataAnnotations;
 
 namespace AppMvc.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
-    private readonly IAddressesService _addressService;
     private readonly IAdminService _adminService;
 
-    public HomeController(ILogger<HomeController> logger, IAddressesService addressesService, IAdminService adminService)
+    public HomeController(IAdminService adminService)
     {
-        _logger = logger;
-        _addressService = addressesService;
         _adminService = adminService;
     }
 

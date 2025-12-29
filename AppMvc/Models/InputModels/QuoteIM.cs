@@ -8,8 +8,8 @@ namespace AppMvc.Models
     {
         public StatusIM StatusIM { get; set; }
         public Guid QuoteId { get; set; } = Guid.NewGuid();
-        public string Quote { get; set; }
-        public string Author { get; set; }
+        public string Quote { get; set; } = string.Empty;
+        public string Author { get; set; } = string.Empty;
 
 
         public FavoriteQuoteIM() { StatusIM = StatusIM.Unchanged; }

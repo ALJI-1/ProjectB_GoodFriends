@@ -9,8 +9,8 @@
 <div class="container px-4 py-4" id="view-group">
     <form class="needs-validation" method="post" asp-controller="Friend" asp-action="Save" novalidate>
         <!-- Hidden fields used to bind input model -->
-        <input asp-for="FriendIM.FriendId" value="@Model.FriendIM.FriendId" type="hidden" />
-        <input asp-for="FriendIM.StatusIM" value="@Model.FriendIM.StatusIM" type="hidden" />
+        <input asp-for="FriendIM.FriendId" value="@Model!.FriendIM!.FriendId" type="hidden" />
+        <input asp-for="FriendIM.StatusIM" value="@Model.FriendIM!.StatusIM" type="hidden" />
  
         <h2 class="pb-2 border-bottom">
             @Model.PageHeader

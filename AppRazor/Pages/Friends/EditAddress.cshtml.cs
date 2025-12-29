@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Models.DTO;
-using Models;
-using Services;
-using System.Security.Cryptography;
 using Services.Interfaces;
 using Models.Interfaces;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -20,12 +13,10 @@ namespace AppRazor.Pages
     //Demonstrate how to read Query parameters
     public class EditAddressModel(
         IFriendsService service,
-        IAddressesService addressesService,
-        ILogger<EditAddressModel> logger) : PageModel
+        IAddressesService addressesService) : PageModel
     {
         readonly IFriendsService _service = service;
         readonly IAddressesService _addressesService = addressesService;
-        readonly ILogger<EditAddressModel> _logger = logger;
 
         [BindProperty]
         public FineAddressIM AddressIM { get; set; }

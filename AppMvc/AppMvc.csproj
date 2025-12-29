@@ -15,7 +15,6 @@
       <ProjectReference Include="..\Services\Services.csproj">
         <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
       </ProjectReference>
-      <ProjectReference Include="..\Encryption\Encryption.csproj" />
     </ItemGroup>
 
     <ItemGroup>

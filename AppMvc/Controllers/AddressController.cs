@@ -1,10 +1,6 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using AppMvc.Models;
-using Services;
 using Services.Interfaces;
-using Models.Interfaces;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Models.DTO;
 using Models.Common;
 
@@ -12,30 +8,15 @@ namespace AppMvc.Controllers;
 
 public class AddressController : Controller
 {
-    private readonly ILogger<FriendController> _logger;
     readonly IAdminService _adminService;
     readonly IAddressesService _addressesService;
     readonly IFriendsService _friendService;
-    public List<IFriend> Friends {get; set;} = new List<IFriend>();
-    public IFriend? Friend { get; set; }
-    public string? ErrorMessage { get; set; }
 
-    public FineAddressIM AddressIM { get; set; }
-    public Guid AddressId { get; set; }
-    public string PageHeader { get; set; }
-
-    public int NrOfPages { get; set; }
     public int PageSize { get; } = 5;
 
-    public int ThisPageNr { get; set; } = 0;
-    public int PrevPageNr { get; set; } = 0;
-    public int NextPageNr { get; set; } = 0;
-    public int PresentPages { get; set; } = 0;
-
-    public AddressController(ILogger<FriendController> logger, IAddressesService addressesService, IAdminService adminService, IFriendsService friendsService)
+    public AddressController(IAddressesService addressesService, IAdminService adminService, IFriendsService friendsService)
     {
         _addressesService = addressesService;
-        _logger = logger;
         _adminService = adminService;
         _friendService = friendsService;
     }
@@ -78,35 +59,6 @@ public class AddressController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Edit(Guid addressId, Guid friendId)
-    {
-        var response = await _addressesService.ReadAddressAsync(addressId, false);
-        var vm = new EditAddressViewModel(response.Item) { AddressId = addressId };
-        return View(vm);
-    }
-
-    [HttpGet]
-    public async Task <IActionResult> CityOverview()
-    {
-        var fm = new CityOverviewModel();
-
-        var info = await _adminService.GuestInfoAsync();
-
-        var friends = info.Item.Friends.Where(i => i.Country == "Denmark");
-        var pets = info.Item.Pets.Where(i => i.Country == "Denmark");
-        
-        fm.CityInfoList = friends.Select(f => new CityOverviewModel
-            {
-                Country = f.Country,
-                City = f.City,
-                NrFriends = f.NrFriends,
-                NrPets = pets.FirstOrDefault(p => p.City == f.City && p.Country == f.Country)?.NrPets ?? 0
-            }).ToList();
-
-        return View(fm);
-    }
-
-    [HttpGet]
     public async Task <IActionResult> CountryOverview()
     {
         var co = new CountryOverviewModel();
@@ -132,21 +84,22 @@ public class AddressController : Controller
     public async Task <IActionResult> FriendsInACountry(string pagenr, string filter)
     {
         var vm = new FriendsInACountryViewModel();
+        int thisPageNr = 0;
         if (!string.IsNullOrEmpty(filter) && Enum.TryParse<Countries>(filter, true, out var country))
-            {
-                vm.SelectedCountry = country;
-                vm.Filter = country.ToString();
-            }
-            else
-            {
-                vm.Filter = filter ?? "";
-            }
-            
-            if (int.TryParse(pagenr, out int _pagenr))
-            {
-                ThisPageNr = _pagenr;
-            }
-            var info = await _adminService.GuestInfoAsync();
+        {
+            vm.SelectedCountry = country;
+            vm.Filter = country.ToString();
+        }
+        else
+        {
+            vm.Filter = filter ?? "";
+        }
+        
+        if (int.TryParse(pagenr, out int _pagenr))
+        {
+            thisPageNr = _pagenr;
+        }
+        var info = await _adminService.GuestInfoAsync();
 
             var friends = info.Item.Friends.Where(i => i.Country == vm.Filter && !string.IsNullOrEmpty(i.City));
             var pets = info.Item.Pets.Where(i => i.Country == vm.Filter && !string.IsNullOrEmpty(i.City));
@@ -171,7 +124,7 @@ public class AddressController : Controller
 
             // Calculate pagination
             vm.NrOfPages = (int)Math.Ceiling(allFriends.Count / (double)PageSize);
-            vm.ThisPageNr = Math.Min(ThisPageNr, vm.NrOfPages - 1);
+            vm.ThisPageNr = Math.Min(thisPageNr, vm.NrOfPages - 1);
             vm.PrevPageNr = Math.Max(0, vm.ThisPageNr - 1);
             vm.NextPageNr = Math.Min(vm.NrOfPages - 1, vm.ThisPageNr + 1);
             vm.PresentPages = vm.NrOfPages;
@@ -195,8 +148,8 @@ public class AddressController : Controller
             // Populate validation error messages for server-side validation display
             vm.HasValidationErrors = true;
             vm.ValidationErrorMsgs = ModelState
-                .Where(s => s.Value.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
-                .SelectMany(e => e.Value.Errors)
+                .Where(s => s.Value!.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
+                .SelectMany(e => e.Value!.Errors)
                 .Select(e => e.ErrorMessage);
             return View("EditAddress", vm);
         }

@@ -10,6 +10,6 @@ namespace AppMvc.Models
         public List<FavoritePetIM> PetsIM { get; set; } = [];
         public List<FavoriteQuoteIM> QuotesIM { get; set; } = [];
         public string ViewType { get; set; } = "pets"; 
-        public string ErrorMessage { get; set; } = null;  
+        public string? ErrorMessage { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace AppRazor.Pages.Friends
     public class CountryOverviewModel(IAdminService adminService) : PageModel
     {
         private readonly IAdminService _adminService = adminService;
-        public IEnumerable<Models.DTO.GstUsrInfoFriendsDto>? CountryInfo;
+        public IEnumerable<Models.DTO.GstUsrInfoFriendsDto> CountryInfo = [];
        
         public async Task <ActionResult>OnGet()
         {

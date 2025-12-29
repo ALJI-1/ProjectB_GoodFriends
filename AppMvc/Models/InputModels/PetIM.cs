@@ -1,9 +1,4 @@
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Models.Interfaces;
-using Services.Interfaces;
 using Models.Common;
 
 namespace AppMvc.Models
@@ -12,7 +7,7 @@ namespace AppMvc.Models
         {
             public StatusIM StatusIM { get; set; }
             public Guid PetId { get; set; } = Guid.NewGuid();
-            public string Name { get; set; }
+            public string Name { get; set; } = string.Empty;
             public AnimalMood Mood { get; set; }
 
             public FavoritePetIM() { StatusIM = StatusIM.Unchanged; }

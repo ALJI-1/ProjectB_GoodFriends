@@ -13,8 +13,8 @@ namespace AppRazor.Pages.Friends
     {
         readonly IFriendsService _friendService = friendsService;
         
-        public IFriend? Friend { get; set; }
-        public string? ErrorMessage { get; set; }
+        public IFriend Friend { get; set; }
+        public string ErrorMessage { get; set; }
 
         //Will execute on a Get request
         public async Task <ActionResult> OnGet(string id)

@@ -15,13 +15,13 @@ namespace AppMvc.Pages
         public Guid FriendId { get; set; } = Guid.NewGuid();
         
         [Required(ErrorMessage = "You must provide a first name")]
-        public string FirstName { get; set; }
+        public string FirstName { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "You must provide a last name")]
-        public string LastName { get; set; }
+        public string LastName { get; set; } = string.Empty;
         
         [Required(ErrorMessage = "You must provide an email")]
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
 
 
         public BestFriendIM() { StatusIM = StatusIM.Unchanged; }

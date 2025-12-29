@@ -1,19 +1,12 @@
-using DbModels;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Models;
-using Models.DTO;
 using Models.Interfaces;
-using Services;
-using Services.Interfaces;
 
 namespace AppMvc.Models
 {
     public enum Countries {Sweden, Norway, Denmark, Finland}
     public class CityInfo
     {
-        public string Country { get; set; }
-        public string City { get; set; }
+        public string Country { get; set; } = string.Empty;
+        public string City { get; set; } = string.Empty;
         public int NrFriends { get; set; }
         public int NrPets { get; set; }
     }
@@ -22,7 +15,7 @@ namespace AppMvc.Models
     {
         public Countries? SelectedCountry { get; set; } = null;
         public List<IFriend> Friends {get; set;} = new List<IFriend>();
-        public IEnumerable<CityInfo> CityInfoList { get; set; }
+        public IEnumerable<CityInfo> CityInfoList { get; set; } = new List<CityInfo>();
         
         //Pagination
         public int NrOfPages { get; set; }

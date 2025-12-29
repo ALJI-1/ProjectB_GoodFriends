@@ -1,48 +1,26 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using AppMvc.Models;
-using Services;
+using AppMvc.Pages;
 using Services.Interfaces;
 using Models.Interfaces;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Models.DTO;
-using AppMvc.Pages;
 using Models.Common;
-using System.Linq;
 
 namespace AppMvc.Controllers;
 
 public class FriendController : Controller
 {
-    private readonly ILogger<FriendController> _logger;
-
     readonly IQuotesService _quotesService;
     readonly IPetsService _petsService;
-    readonly IAdminService _adminService;
     readonly IAddressesService _addressesService;
     readonly IFriendsService _friendsService;
 
-    public string? ErrorMessage { get; set; }
-    public string PageHeader { get; set; }
-    public string ViewType { get; set; } = "pets"; 
-
-    public int NrOfPages { get; set; }
     public int PageSize { get; } = 5;
 
-    public int ThisPageNr { get; set; } = 0;
-    public int PrevPageNr { get; set; } = 0;
-    public int NextPageNr { get; set; } = 0;
-    public int PresentPages { get; set; } = 0;
-
-    public string City { get; set; } = string.Empty;
-    public string Country { get; set; } = string.Empty;
-
-
-    public FriendController(ILogger<FriendController> logger, IAddressesService addressesService, IAdminService adminService, IFriendsService friendsService, IPetsService petsService, IQuotesService quotesService)
+    public FriendController(IAddressesService addressesService, IFriendsService friendsService, IPetsService petsService, IQuotesService quotesService)
     {
         _addressesService = addressesService;
-        _logger = logger;
-        _adminService = adminService;
         _friendsService = friendsService;
         _petsService = petsService;
         _quotesService = quotesService;
@@ -52,86 +30,23 @@ public class FriendController : Controller
     [HttpGet]
     public async Task <IActionResult> FriendsList(string pagenr)
     {
-
+        int thisPageNr = 0;
         if (int.TryParse(pagenr, out int _pagenr))
-            {
-                ThisPageNr = _pagenr;
-            }
-            var model = new FriendsListViewModel();
+        {
+            thisPageNr = _pagenr;
+        }
+        var model = new FriendsListViewModel();
 
-            var response = await _friendsService.ReadFriendsAsync(true, true, null, ThisPageNr, PageSize);
-            model.Friends = response.PageItems;
+        var response = await _friendsService.ReadFriendsAsync(true, true, null, thisPageNr, PageSize);
+        model.Friends = response.PageItems;
 
-            model.NrOfPages = response.PageCount;
-            model.ThisPageNr = response.PageNr; 
-            model.PrevPageNr = Math.Max(0, model.ThisPageNr - 1);
-            model.NextPageNr = Math.Min(model.NrOfPages - 1, model.ThisPageNr + 1);
-            model.PresentPages = model.NrOfPages;
+        model.NrOfPages = response.PageCount;
+        model.ThisPageNr = response.PageNr; 
+        model.PrevPageNr = Math.Max(0, model.ThisPageNr - 1);
+        model.NextPageNr = Math.Min(model.NrOfPages - 1, model.ThisPageNr + 1);
+        model.PresentPages = model.NrOfPages;
 
         return View(model);
-    }
-
-    [HttpGet]
-    public async Task <IActionResult> FriendDetail(string pagenr)
-    {
-
-        if (int.TryParse(pagenr, out int _pagenr))
-            {
-                ThisPageNr = _pagenr;
-            }
-            var model = new FriendsListViewModel();
-
-            var response = await _friendsService.ReadFriendsAsync(true, true, null, ThisPageNr, PageSize);
-            model.Friends = response.PageItems;
-
-            model.NrOfPages = response.PageCount;
-            model.ThisPageNr = response.PageNr; 
-            model.PrevPageNr = Math.Max(0, model.ThisPageNr - 1);
-            model.NextPageNr = Math.Min(model.NrOfPages - 1, model.ThisPageNr + 1);
-            model.PresentPages = model.NrOfPages;
-
-        return View(model);
-    }
-
-    [HttpGet]
-    public async Task <IActionResult> UpdateLists(string id, string view)
-    {
-        var vm = new FriendsPetsOrQuotesViewModel();
-        try
-        {
-            if (!Guid.TryParse(id, out Guid friendId))
-            {
-                ErrorMessage = "Invalid friend ID";
-                return View();
-            }
-
-            ViewType = view?.ToLower() ?? "pets";
-            
-            var response = await _friendsService.ReadFriendAsync(friendId, false);
-            vm.Friend = response.Item;
-
-            if (vm.Friend == null)
-            {
-                ErrorMessage = "Friend not found";
-                return View();
-            }
-
-            if (ViewType == "pets")
-            {
-                vm.Pets = vm.Friend.Pets.ToList();
-            }
-            else if (ViewType == "quotes")
-            {
-                vm.Quotes = vm.Friend.Quotes.ToList();
-            }
-
-            return View();
-        }
-        catch (Exception ex)
-        {
-            ErrorMessage = ex.Message;
-            return View();
-        }
     }
     public async Task<IActionResult> EditFriend(string id)
     {
@@ -155,16 +70,8 @@ public class FriendController : Controller
         }
         catch (Exception e)
         {
-            ErrorMessage = e.Message;
+            vm.ErrorMessage = e.Message;
         }
-        return View(vm);
-    }
-    [HttpGet]
-    public async Task<IActionResult> Edit(Guid addressId, Guid friendId)
-    {
-        var vm = new EditFriendViewModel();
-        var response = await _friendsService.ReadFriendAsync(vm.FriendId, false);
-        vm.FriendId = response.Item.FriendId;
         return View(vm);
     }
 
@@ -176,30 +83,31 @@ public class FriendController : Controller
         vm.City = city ?? "";
         vm.Country = country ?? "";
         
+        int thisPageNr = 0;
         if (int.TryParse(pagenr, out int _pagenr))
         {
-            ThisPageNr = _pagenr;
+            thisPageNr = _pagenr;
         }
         // Get all addresses (use a large page size to get all)
-            var info = await _addressesService.ReadAddressesAsync(true, false, null, 0, 1000);
+        var info = await _addressesService.ReadAddressesAsync(true, false, null, 0, 1000);
 
-            // Filter friends whose address is in the selected city and country
-            var allFriends = info.PageItems
-                .Where(a => a.City == vm.City && a.Country == vm.Country)
-                .SelectMany(a => a.Friends)
-                .ToList();
+        // Filter friends whose address is in the selected city and country
+        var allFriends = info.PageItems
+            .Where(a => a.City == vm.City && a.Country == vm.Country)
+            .SelectMany(a => a.Friends)
+            .ToList();
 
-            // Get all pets for those friends
-            vm.Pets = allFriends
-                .SelectMany(f => (f.Pets ?? new List<IPet>()))
-                .ToList();
+        // Get all pets for those friends
+        vm.Pets = allFriends
+            .SelectMany(f => (f.Pets ?? new List<IPet>()))
+            .ToList();
 
-            // Calculate pagination
-            vm.NrOfPages = (int)Math.Ceiling(allFriends.Count / (double)PageSize);
-            vm.ThisPageNr = Math.Min(ThisPageNr, Math.Max(0, vm.NrOfPages - 1));
-            vm.PrevPageNr = Math.Max(0, vm.ThisPageNr - 1);
-            vm.NextPageNr = Math.Min(Math.Max(0, vm.NrOfPages - 1), vm.ThisPageNr + 1);
-            vm.PresentPages = vm.NrOfPages;
+        // Calculate pagination
+        vm.NrOfPages = (int)Math.Ceiling(allFriends.Count / (double)PageSize);
+        vm.ThisPageNr = Math.Min(thisPageNr, Math.Max(0, vm.NrOfPages - 1));
+        vm.PrevPageNr = Math.Max(0, vm.ThisPageNr - 1);
+        vm.NextPageNr = Math.Min(Math.Max(0, vm.NrOfPages - 1), vm.ThisPageNr + 1);
+        vm.PresentPages = vm.NrOfPages;
 
             // Get friends for current page
             vm.Friends = allFriends
@@ -223,7 +131,7 @@ public class FriendController : Controller
         }
         catch (Exception e)
         {
-            ErrorMessage = e.Message;
+            vm.ErrorMessage = e.Message;
         }
         return View(vm);
     }
@@ -268,47 +176,6 @@ public class FriendController : Controller
         {
             vm.ErrorMessage = ex.Message;
             return View(vm);
-        }
-    }
-
-    [HttpGet]
-    public async Task <IActionResult> FriendsPetsOrQuotesModel(string id, string view)
-    {
-        var vm = new FriendsPetsOrQuotesViewModel();
-        try
-        {
-            if (!Guid.TryParse(id, out Guid friendId))
-            {
-                ErrorMessage = "Invalid friend ID";
-                return View();
-            }
-
-            ViewType = view?.ToLower() ?? "pets";
-            
-            var response = await _friendsService.ReadFriendAsync(friendId, false);
-            vm.Friend = response.Item;
-
-            if (vm.Friend == null)
-            {
-                ErrorMessage = "Friend not found";
-                return View();
-            }
-
-            if (ViewType == "pets")
-            {
-                vm.Pets = vm.Friend.Pets.ToList();
-            }
-            else if (ViewType == "quotes")
-            {
-                vm.Quotes = vm.Friend.Quotes.ToList();
-            }
-
-            return View();
-        }
-        catch (Exception ex)
-        {
-            ErrorMessage = ex.Message;
-            return View();
         }
     }
 
@@ -366,15 +233,15 @@ public class FriendController : Controller
         ModelState.Clear();
         
         // Reload the friend from database, discarding any unsaved changes
-        var response = await _friendsService.ReadFriendAsync(vm.FriendIM.FriendId, false);
-        vm.FriendIM = new BestFriendIM(response.Item);
+        var response = await _friendsService.ReadFriendAsync(vm.FriendIM!.FriendId, false);
+        vm.FriendIM = new BestFriendIM(response.Item!);
         vm.PageHeader = "Edit details of a friend";
         return View("EditFriend", vm);
     }
 
     public async Task<IActionResult> Save(EditFriendViewModel vm)
     {
-        vm.PageHeader = (vm.FriendIM.StatusIM == StatusIM.Inserted) ?
+        vm.PageHeader = (vm.FriendIM!.StatusIM == StatusIM.Inserted) ?
             "Create a new friend" : "Edit details of a friend";
 
         if (!ModelState.IsValid)
@@ -382,8 +249,8 @@ public class FriendController : Controller
             // Populate validation error messages for server-side validation display
             vm.HasValidationErrors = true;
             vm.ValidationErrorMsgs = ModelState
-                .Where(s => s.Value.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
-                .SelectMany(e => e.Value.Errors)
+                .Where(s => s.Value!.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
+                .SelectMany(e => e.Value!.Errors)
                 .Select(e => e.ErrorMessage);
             return View("EditFriend", vm);
         }
@@ -391,7 +258,7 @@ public class FriendController : Controller
         {
             var dto = vm.FriendIM.ToDto();
             var response = await _friendsService.CreateFriendAsync(dto);
-            vm.FriendIM = new BestFriendIM(response.Item);
+            vm.FriendIM = new BestFriendIM(response.Item!);
         }
         else
         {
@@ -399,7 +266,7 @@ public class FriendController : Controller
             var existingFriend = await _friendsService.ReadFriendAsync(vm.FriendIM.FriendId, false);
             
             // Create DTO from existing friend to preserve all relationships
-            var dto = new FriendCuDto(existingFriend.Item)
+            var dto = new FriendCuDto(existingFriend.Item!)
             {
                 // Update only the editable fields
                 FirstName = vm.FriendIM.FirstName,
@@ -408,7 +275,7 @@ public class FriendController : Controller
             };
             
             var updateResponse = await _friendsService.UpdateFriendAsync(dto);
-            vm.FriendIM = new BestFriendIM(updateResponse.Item);
+            vm.FriendIM = new BestFriendIM(updateResponse.Item!);
         }
 
         vm.PageHeader= "Edit details of a friend";

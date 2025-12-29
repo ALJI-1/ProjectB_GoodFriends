@@ -1,10 +1,5 @@
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-
-using Models;
-using Services;
-
 using Services.Interfaces;
 using Models.Interfaces;
 
@@ -12,9 +7,7 @@ namespace AppRazor.Pages.Friends
 {
     public class FriendsListModel : PageModel
     {
-        readonly IFriendsService _service = null;
-        readonly IAdminService _adminService = null;
-        readonly ILogger<FriendsListModel> _logger = null;
+        readonly IFriendsService _service;
 
         public List<IFriend> Friends { get; set; } = new List<IFriend>();
 
@@ -47,11 +40,9 @@ namespace AppRazor.Pages.Friends
             return Page();
         }
 
-        public FriendsListModel(IFriendsService service, IAdminService adminService, ILogger<FriendsListModel> logger)
+        public FriendsListModel(IFriendsService service)
         {
-            _logger = logger;
             _service = service;
-            _adminService = adminService;
         }
     }
 }

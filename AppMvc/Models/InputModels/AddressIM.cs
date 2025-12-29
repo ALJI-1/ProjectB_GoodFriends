@@ -12,16 +12,16 @@ public class FineAddressIM
     public Guid AddressId { get; set; } = Guid.NewGuid();
 
     [Required(ErrorMessage = "You must provide a street address")]
-    public string StreetAddress { get; set; }
+    public string StreetAddress { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "You must provide a zip code")]
     public int ZipCode { get; set; }
 
     [Required(ErrorMessage = "You must provide a city")]
-    public string City { get; set; }
+    public string City { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "You must provide a country")]
-    public string Country { get; set; }
+    public string Country { get; set; } = string.Empty;
 
 
     #region constructors and model update

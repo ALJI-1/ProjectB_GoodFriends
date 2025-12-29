@@ -1,7 +1,7 @@
 ﻿@page
 @model AppRazor.Pages.Friends.ModelViewModel
 @{
-    ViewData["Title"] = "ModelView";
+    ViewData["Title"] = "Friend Details";
 }
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @attribute [IgnoreAntiforgeryToken]
@@ -43,7 +43,14 @@
                             <label for="friendPets" class="form-label">Friends Pets</label>
                             <div class="input-group">
                                 <input type="text" class="form-control" id="friendPets" value="@(Model.Friend?.Pets?.Count ?? 0)" readonly>
-                                <a asp-page="FriendsDetails" asp-route-id="@Model.Friend?.FriendId" asp-route-view="pets" class="btn btn-success btn-sm" type="button">View</a>
+                                @if ((Model.Friend?.Pets?.Count ?? 0) > 0)
+                                {
+                                    <a asp-page="FriendsDetails" asp-route-id="@Model.Friend?.FriendId" asp-route-view="pets" class="btn btn-success btn-sm" type="button">View</a>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-secondary btn-sm" type="button" disabled>View</button>
+                                }
                             </div>  
                         </div>
 
@@ -51,7 +58,14 @@
                             <label for="friendQuotes" class="form-label">Friends Quotes</label>
                             <div class="input-group">
                                 <input type="text" class="form-control" id="friendQuotes" value="@(Model.Friend?.Quotes?.Count ?? 0)" readonly>
-                                <a asp-page="FriendsDetails" asp-route-id="@Model.Friend?.FriendId" asp-route-view="quotes" class="btn btn-success btn-sm" type="button">View</a>
+                                @if ((Model.Friend?.Quotes?.Count ?? 0) > 0)
+                                {
+                                    <a asp-page="FriendsDetails" asp-route-id="@Model.Friend?.FriendId" asp-route-view="quotes" class="btn btn-success btn-sm" type="button">View</a>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-secondary btn-sm" type="button" disabled>View</button>
+                                }
                             </div>                            
                         </div>
 

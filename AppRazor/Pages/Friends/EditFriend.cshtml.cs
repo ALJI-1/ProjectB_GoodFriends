@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Models.DTO;
-using Models;
-using Services;
-using System.Security.Cryptography;
 using Services.Interfaces;
 using Models.Interfaces;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -17,10 +11,8 @@ using Models.Common;
 
 namespace AppRazor.Pages
 {
-    //Demonstrate how to read Query parameters
     public class EditFriendModel : PageModel
     {
-        //Just like for WebApi
         readonly IFriendsService _service = null;
         readonly ILogger<EditFriendModel> _logger = null;
 
@@ -29,7 +21,6 @@ namespace AppRazor.Pages
 
         public string PageHeader { get; set; }
 
-        //public member becomes part of the Model in the Razor page
         public string ErrorMessage { get; set; } = null;
 
         public bool HasValidationErrors { get; set; }
@@ -37,21 +28,18 @@ namespace AppRazor.Pages
         public IEnumerable<KeyValuePair<string, ModelStateEntry>> InvalidKeys { get; set; }
 
 
-        //Will execute on a Get request
         public async Task<IActionResult> OnGet()
         {
             try
             {
                 if (Guid.TryParse(Request.Query["id"], out Guid _id))
                 {
-                    //Use the Service and populate the InputModel
                     var response = await _service.ReadFriendAsync(_id, false);
                     FriendIM = new BestFriendIM(response.Item);
                     PageHeader = "Edit details of a friend";
                 }
                 else
                 {
-                    //Create an empty InputModel
                     FriendIM = new BestFriendIM();
                     FriendIM.StatusIM = StatusIM.Inserted;
                     PageHeader = "Create a new friend";
@@ -66,7 +54,8 @@ namespace AppRazor.Pages
 
         public async Task<IActionResult> OnPostUndo()
         {
-            //Use the Service and populate the InputModel
+            ModelState.Clear();
+            
             var response = await _service.ReadFriendAsync(FriendIM.FriendId, false);
             FriendIM = new BestFriendIM(response.Item);
             PageHeader = "Edit details of a friend";
@@ -75,18 +64,16 @@ namespace AppRazor.Pages
 
         public async Task<IActionResult> OnPostSave()
         {
-            //PageHeader is stored in TempData which has to be set after a Post
             PageHeader = (FriendIM.StatusIM == StatusIM.Inserted) ?
                 "Create a new friend" : "Edit details of a friend";
 
             if (!IsValid())
             {
-                //The page is not valid
                 return Page();
             }
+
             if (FriendIM.StatusIM == StatusIM.Inserted)
             {
-                //It is an create
                 var dto = FriendIM.ToDto();
                 var response = await _service.CreateFriendAsync(dto);
 
@@ -94,8 +81,6 @@ namespace AppRazor.Pages
             }
             else
             {
-                //It is an update
-                //update the changes and save
                 var dto = FriendIM.ToDto();
                 var updateResponse = await _service.UpdateFriendAsync(dto);
                 
@@ -105,9 +90,6 @@ namespace AppRazor.Pages
             PageHeader = "Edit details of a friend";
             return Redirect("FriendsList");
         }
-
-
-        //Inject services just like in WebApi
         public EditFriendModel(IFriendsService service, ILogger<EditFriendModel> logger)
         {
             _logger = logger;
@@ -126,7 +108,7 @@ namespace AppRazor.Pages
             public StatusIM StatusIM { get; set; }
 
             //Properties from Model which is to be edited in the <form>
-            public Guid FriendId { get; init; } = Guid.NewGuid();
+            public Guid FriendId { get; set; } = Guid.NewGuid();
             
             [Required(ErrorMessage = "You must provide a first name")]
             public string FirstName { get; set; }

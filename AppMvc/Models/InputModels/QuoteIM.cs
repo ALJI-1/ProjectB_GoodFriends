@@ -7,7 +7,7 @@ namespace AppMvc.Models
    public class FavoriteQuoteIM
     {
         public StatusIM StatusIM { get; set; }
-        public Guid QuoteId { get; init; } = Guid.NewGuid();
+        public Guid QuoteId { get; set; } = Guid.NewGuid();
         public string Quote { get; set; }
         public string Author { get; set; }
 

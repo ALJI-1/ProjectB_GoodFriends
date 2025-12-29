@@ -9,7 +9,7 @@ public class FineAddressIM
     public StatusIM StatusIM { get; set; }
 
     //Properties from Model which is to be edited in the <form>
-    public Guid AddressId { get; init; } = Guid.NewGuid();
+    public Guid AddressId { get; set; } = Guid.NewGuid();
 
     [Required(ErrorMessage = "You must provide a street address")]
     public string StreetAddress { get; set; }

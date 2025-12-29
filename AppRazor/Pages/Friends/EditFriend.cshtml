@@ -1,7 +1,7 @@
 ﻿@page
 @model AppRazor.Pages.EditFriendModel
 @{
-    ViewData["Title"] = "Study InputModelListSimple";
+    ViewData["Title"] = "Edit Friend";
 }
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @attribute [IgnoreAntiforgeryToken]
@@ -53,19 +53,19 @@
                     <div class="row g-3">
                         <div class="col-sm-6">
                             <label for="firstName" class="form-label">First name</label>
-                            <input type="text" class="form-control" asp-for="FriendIM.FirstName" id="firstName" value="@Model.FriendIM.FirstName">
+                            <input type="text" class="form-control" asp-for="FriendIM.FirstName" id="firstName">
                             <span asp-validation-for="FriendIM.FirstName" class="invalid-feedback"></span>
                         </div>
                         <div class="col-sm-6">
                         </div>
                         <div class="col-sm-12">
                             <label for="lastName" class="form-label">Last name</label>
-                            <input type="text" class="form-control" asp-for="FriendIM.LastName" id="lastName" value="@Model.FriendIM.LastName">                           
+                            <input type="text" class="form-control" asp-for="FriendIM.LastName" id="lastName">                           
                             <span asp-validation-for="FriendIM.LastName" class="invalid-feedback"></span>
                         </div>
                         <div class="col-sm-12">
                             <label for="email" class="form-label">Email</label>
-                            <input type="text" class="form-control" asp-for="FriendIM.Email" id="email" value="@Model.FriendIM.Email">
+                            <input type="text" class="form-control" asp-for="FriendIM.Email" id="email">
                             <span asp-validation-for="FriendIM.Email" class="invalid-feedback"></span>
                         </div>
                     </div>

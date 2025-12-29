@@ -133,24 +133,24 @@ public class FriendController : Controller
             return View();
         }
     }
-    public async Task<IActionResult> EditFriend()
+    public async Task<IActionResult> EditFriend(string id)
     {
         var vm = new EditFriendViewModel();
         try
         {
-            if (Guid.TryParse(Request.Query["id"], out Guid _id))
+            if (Guid.TryParse(id, out Guid _id))
             {
                 //Use the Service and populate the InputModel
                 var response = await _friendsService.ReadFriendAsync(_id, false);
                 vm.FriendIM = new BestFriendIM(response.Item);
-                PageHeader = "Edit details of a friend";
+                vm.PageHeader = "Edit details of a friend";
             }
             else
             {
                 //Create an empty InputModel
                 vm.FriendIM = new BestFriendIM();
                 vm.FriendIM.StatusIM = StatusIM.Inserted;
-                PageHeader = "Create a new friend";
+                vm.PageHeader = "Create a new friend";
             }
         }
         catch (Exception e)
@@ -228,8 +228,49 @@ public class FriendController : Controller
         return View(vm);
     }
 
-    // Får pets/quotes via asp-route-view i ModelView
-    // Lägger skapar inputmodeller av databasmodellerna
+    [HttpGet]
+    public async Task <IActionResult> FriendsDetails(string id, string view)
+    {
+        var vm = new FriendsPetsOrQuotesViewModel();
+        try
+        {
+            if (!Guid.TryParse(id, out Guid friendId))
+            {
+                vm.ErrorMessage = "Invalid friend ID";
+                return View(vm);
+            }
+
+            vm.ViewType = view?.ToLower() ?? "pets";
+            
+            var response = await _friendsService.ReadFriendAsync(friendId, false);
+            vm.Friend = response.Item;
+
+            if (vm.Friend == null)
+            {
+                vm.ErrorMessage = "Friend not found";
+                return View(vm);
+            }
+
+            if (vm.ViewType == "pets")
+            {
+                vm.Pets = vm.Friend.Pets.ToList();
+                vm.PetsIM = vm.Friend.Pets.Select(p => new FavoritePetIM(p)).ToList();
+            }
+            else if (vm.ViewType == "quotes")
+            {
+                vm.Quotes = vm.Friend.Quotes.ToList();
+                vm.QuotesIM = vm.Friend.Quotes.Select(q => new FavoriteQuoteIM(q)).ToList();
+            }
+
+            return View(vm);
+        }
+        catch (Exception ex)
+        {
+            vm.ErrorMessage = ex.Message;
+            return View(vm);
+        }
+    }
+
     [HttpGet]
     public async Task <IActionResult> FriendsPetsOrQuotesModel(string id, string view)
     {
@@ -291,7 +332,7 @@ public class FriendController : Controller
                 await _petsService.DeletePetAsync(item.PetId);
             }
             vm.PetsIM = vm.Friend.Pets.Select(p => new FavoritePetIM(p)).ToList();
-        return RedirectToAction(nameof(EditFriend), new { id = friendId, view = "pets" });
+        return RedirectToAction(nameof(ModelView), new { id = friendId });
     }
 
     [HttpPost]
@@ -315,7 +356,20 @@ public class FriendController : Controller
         }
         vm.QuotesIM = vm.Friend.Quotes.Select(q => new FavoriteQuoteIM(q)).ToList();
 
-        return RedirectToAction(nameof(EditFriend), new { id = friendId, view = "quotes" });
+        return RedirectToAction(nameof(ModelView), new { id = friendId });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Undo(EditFriendViewModel vm)
+    {
+        // Clear ModelState so the reloaded values from database are displayed
+        ModelState.Clear();
+        
+        // Reload the friend from database, discarding any unsaved changes
+        var response = await _friendsService.ReadFriendAsync(vm.FriendIM.FriendId, false);
+        vm.FriendIM = new BestFriendIM(response.Item);
+        vm.PageHeader = "Edit details of a friend";
+        return View("EditFriend", vm);
     }
 
     public async Task<IActionResult> Save(EditFriendViewModel vm)
@@ -325,7 +379,13 @@ public class FriendController : Controller
 
         if (!ModelState.IsValid)
         {
-            return View("Edit", vm);
+            // Populate validation error messages for server-side validation display
+            vm.HasValidationErrors = true;
+            vm.ValidationErrorMsgs = ModelState
+                .Where(s => s.Value.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
+                .SelectMany(e => e.Value.Errors)
+                .Select(e => e.ErrorMessage);
+            return View("EditFriend", vm);
         }
         if (vm.FriendIM.StatusIM == StatusIM.Inserted)
         {
@@ -335,11 +395,20 @@ public class FriendController : Controller
         }
         else
         {
-            var dto = vm.FriendIM.ToDto();
-            var updateResponse = await _friendsService.UpdateFriendAsync(dto);
+            // Fetch existing friend to preserve relationships (Address, Pets, Quotes)
+            var existingFriend = await _friendsService.ReadFriendAsync(vm.FriendIM.FriendId, false);
             
+            // Create DTO from existing friend to preserve all relationships
+            var dto = new FriendCuDto(existingFriend.Item)
+            {
+                // Update only the editable fields
+                FirstName = vm.FriendIM.FirstName,
+                LastName = vm.FriendIM.LastName,
+                Email = vm.FriendIM.Email
+            };
+            
+            var updateResponse = await _friendsService.UpdateFriendAsync(dto);
             vm.FriendIM = new BestFriendIM(updateResponse.Item);
-        
         }
 
         vm.PageHeader= "Edit details of a friend";

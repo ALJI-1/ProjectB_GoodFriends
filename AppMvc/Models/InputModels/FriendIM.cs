@@ -12,7 +12,7 @@ namespace AppMvc.Pages
         public StatusIM StatusIM { get; set; }
 
         //Properties from Model which is to be edited in the <form>
-        public Guid FriendId { get; init; } = Guid.NewGuid();
+        public Guid FriendId { get; set; } = Guid.NewGuid();
         
         [Required(ErrorMessage = "You must provide a first name")]
         public string FirstName { get; set; }

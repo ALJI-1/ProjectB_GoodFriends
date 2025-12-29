@@ -40,17 +40,17 @@ public class AddressController : Controller
         _friendService = friendsService;
     }
 
-    public async Task<IActionResult> EditAddress(Guid _id)
+    public async Task<IActionResult> EditAddress(Guid id)
     {
         var vm = new EditAddressViewModel()
             {
-                FriendId = _id
+                FriendId = id
             };
         try
         {
             
 
-            var friendResponse = await _friendService.ReadFriendAsync(_id, false);
+            var friendResponse = await _friendService.ReadFriendAsync(id, false);
 
             if (friendResponse.Item.Address != null)
             {
@@ -187,12 +187,18 @@ public class AddressController : Controller
 
     public async Task<IActionResult> Save(EditAddressViewModel vm)
     {
-        vm.PageHeader = (AddressIM.StatusIM == StatusIM.Inserted) ?
+        vm.PageHeader = (vm.AddressIM.StatusIM == StatusIM.Inserted) ?
             "Create a new address" : "Edit details of a address";
 
         if (!ModelState.IsValid)
         {
-            return View("Edit", vm);
+            // Populate validation error messages for server-side validation display
+            vm.HasValidationErrors = true;
+            vm.ValidationErrorMsgs = ModelState
+                .Where(s => s.Value.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
+                .SelectMany(e => e.Value.Errors)
+                .Select(e => e.ErrorMessage);
+            return View("EditAddress", vm);
         }
         if (vm.AddressIM.StatusIM == StatusIM.Inserted)
         {
@@ -223,7 +229,7 @@ public class AddressController : Controller
             var dto = vm.AddressIM.ToDto();
             var updateResponse = await _addressesService.UpdateAddressAsync(dto);
             
-            AddressIM = new FineAddressIM(updateResponse.Item);
+            vm.AddressIM = new FineAddressIM(updateResponse.Item);
             
             // Ensure friend still links to the address after update
             var friendResponse = await _friendService.ReadFriendAsync(vm.FriendId, false);
@@ -237,6 +243,6 @@ public class AddressController : Controller
             }
         }
 
-        return RedirectToAction("ModelView", "Friends", new { id = vm.FriendId });
+        return RedirectToAction("ModelView", "Friend", new { id = vm.FriendId });
     }
 }

@@ -11,7 +11,7 @@ namespace AppMvc.Models
     public class FavoritePetIM
         {
             public StatusIM StatusIM { get; set; }
-            public Guid PetId { get; init; } = Guid.NewGuid();
+            public Guid PetId { get; set; } = Guid.NewGuid();
             public string Name { get; set; }
             public AnimalMood Mood { get; set; }
 

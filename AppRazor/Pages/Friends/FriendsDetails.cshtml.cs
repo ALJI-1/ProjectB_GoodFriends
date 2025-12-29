@@ -121,7 +121,7 @@ namespace AppRazor.Pages.Friends
         public class FavoritePetIM
         {
             public StatusIM StatusIM { get; set; }
-            public Guid PetId { get; init; } = Guid.NewGuid();
+            public Guid PetId { get; set; } = Guid.NewGuid();
             public string Name { get; set; }
             public AnimalMood Mood { get; set; }
 
@@ -147,7 +147,7 @@ namespace AppRazor.Pages.Friends
         public class FavoriteQuoteIM
         {
             public StatusIM StatusIM { get; set; }
-            public Guid QuoteId { get; init; } = Guid.NewGuid();
+            public Guid QuoteId { get; set; } = Guid.NewGuid();
             public string Quote { get; set; }
             public string Author { get; set; }
 

@@ -8,7 +8,7 @@
 <!-- Page view-quote -->
 <div class="container px-4 py-4" id="view-group">
     <form class="needs-validation" method="post" asp-controller="Address" asp-action="Save" novalidate>
-        <!-- Hidden fields used to bind input model -->
+        
         <input asp-for="FriendId" value="@Model.FriendId" type="hidden" />
         <input asp-for="AddressIM.AddressId" value="@Model.AddressIM.AddressId" type="hidden" />
         <input asp-for="AddressIM.StatusIM" value="@Model.AddressIM.StatusIM" type="hidden" />
@@ -36,7 +36,6 @@
         }
         else
         {
-            <!-- Server side validation errors, rough but just in case client side validation is not working or tampered with -->
             @if (Model.HasValidationErrors)
             {
                 <div class="row g-3">
@@ -78,38 +77,6 @@
             </div>
         }
     </form>
-
-    <!-- inital template that can be easily hidden -->
-    <div class="d-none">
-        <form class="needs-validation" method="post" novalidate>
-            <h2 class="pb-2 border-bottom">
-                TEMPLATE
-                <button class="btn btn-primary-outline" type="submit">
-                    <svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#save" /></svg>
-                </button>
-                <button class="btn btn-primary-outline" type="submit">
-                    <svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#undo" /></svg>
-                </button>
-            </h2>
-
-            <div class="row row-cols-1 row-cols-lg-4 align-items-stretch g-4 py-5">
-                <div class="col-md-7 col-lg-10">
-                    <div class="row g-3">
-                        <div class="col-sm-6">
-                            <label for="author" class="form-label">Author</label>
-                            <input type="text" class="form-control" id="author" value="Sir Connan Doyle" readonly>
-                        </div>
-                        <div class="col-sm-6">
-                        </div>
-                        <div class="col-sm-12">
-                            <label for="quote" class="form-label">Quote</label>
-                            <input type="text" class="form-control" id="quote" value="Sherlock is best" readonly>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
 </div>
 
 @section Scripts {

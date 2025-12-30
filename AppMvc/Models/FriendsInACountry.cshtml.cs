@@ -17,7 +17,6 @@ namespace AppMvc.Models
         public List<IFriend> Friends {get; set;} = new List<IFriend>();
         public IEnumerable<CityInfo> CityInfoList { get; set; } = new List<CityInfo>();
         
-        //Pagination
         public int NrOfPages { get; set; }
         public int PageSize { get; } = 5;
         public int ThisPageNr { get; set; } = 0;

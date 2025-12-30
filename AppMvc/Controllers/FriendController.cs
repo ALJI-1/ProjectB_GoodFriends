@@ -26,7 +26,6 @@ public class FriendController : Controller
         _quotesService = quotesService;
     }
 
-    //Will execute on a Get request
     [HttpGet]
     public async Task <IActionResult> FriendsList(string pagenr)
     {
@@ -55,14 +54,12 @@ public class FriendController : Controller
         {
             if (Guid.TryParse(id, out Guid _id))
             {
-                //Use the Service and populate the InputModel
                 var response = await _friendsService.ReadFriendAsync(_id, false);
                 vm.FriendIM = new BestFriendIM(response.Item);
                 vm.PageHeader = "Edit details of a friend";
             }
             else
             {
-                //Create an empty InputModel
                 vm.FriendIM = new BestFriendIM();
                 vm.FriendIM.StatusIM = StatusIM.Inserted;
                 vm.PageHeader = "Create a new friend";
@@ -88,16 +85,15 @@ public class FriendController : Controller
         {
             thisPageNr = _pagenr;
         }
-        // Get all addresses (use a large page size to get all)
+
         var info = await _addressesService.ReadAddressesAsync(true, false, null, 0, 1000);
 
-        // Filter friends whose address is in the selected city and country
+
         var allFriends = info.PageItems
             .Where(a => a.City == vm.City && a.Country == vm.Country)
             .SelectMany(a => a.Friends)
             .ToList();
 
-        // Get all pets for those friends
         vm.Pets = allFriends
             .SelectMany(f => (f.Pets ?? new List<IPet>()))
             .ToList();
@@ -183,11 +179,13 @@ public class FriendController : Controller
     public async Task<IActionResult> DeletePet(Guid id, Guid friendId)
     {
         var vm = new FriendsPetsOrQuotesViewModel();
+        
         var response = await _friendsService.ReadFriendAsync(friendId, false);
         vm.Friend = response.Item;
         vm.Pets = vm.Friend.Pets.ToList();
         vm.PetsIM = vm.Friend.Pets.Select(p => new FavoritePetIM(p)).ToList();
         var petToDelete = vm.PetsIM.FirstOrDefault(q => q.PetId == id);
+
         if (petToDelete != null)
         {
             petToDelete.StatusIM = StatusIM.Deleted;
@@ -229,10 +227,8 @@ public class FriendController : Controller
     [HttpPost]
     public async Task<IActionResult> Undo(EditFriendViewModel vm)
     {
-        // Clear ModelState so the reloaded values from database are displayed
         ModelState.Clear();
         
-        // Reload the friend from database, discarding any unsaved changes
         var response = await _friendsService.ReadFriendAsync(vm.FriendIM!.FriendId, false);
         vm.FriendIM = new BestFriendIM(response.Item!);
         vm.PageHeader = "Edit details of a friend";
@@ -246,7 +242,6 @@ public class FriendController : Controller
 
         if (!ModelState.IsValid)
         {
-            // Populate validation error messages for server-side validation display
             vm.HasValidationErrors = true;
             vm.ValidationErrorMsgs = ModelState
                 .Where(s => s.Value!.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
@@ -262,13 +257,10 @@ public class FriendController : Controller
         }
         else
         {
-            // Fetch existing friend to preserve relationships (Address, Pets, Quotes)
             var existingFriend = await _friendsService.ReadFriendAsync(vm.FriendIM.FriendId, false);
             
-            // Create DTO from existing friend to preserve all relationships
             var dto = new FriendCuDto(existingFriend.Item!)
             {
-                // Update only the editable fields
                 FirstName = vm.FriendIM.FirstName,
                 LastName = vm.FriendIM.LastName,
                 Email = vm.FriendIM.Email
@@ -281,9 +273,6 @@ public class FriendController : Controller
         vm.PageHeader= "Edit details of a friend";
         return RedirectToAction("FriendsList");
     }
-
-
-    
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

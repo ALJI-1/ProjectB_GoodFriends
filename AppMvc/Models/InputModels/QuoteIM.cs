@@ -11,7 +11,6 @@ namespace AppMvc.Models
         public string Quote { get; set; } = string.Empty;
         public string Author { get; set; } = string.Empty;
 
-
         public FavoriteQuoteIM() { StatusIM = StatusIM.Unchanged; }
 
         public FavoriteQuoteIM(FavoriteQuoteIM original)

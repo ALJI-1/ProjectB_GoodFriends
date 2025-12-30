@@ -26,7 +26,6 @@ namespace AppMvc.Pages
 
         public BestFriendIM() { StatusIM = StatusIM.Unchanged; }
 
-        //Copy constructor
         public BestFriendIM(BestFriendIM original)
         {
             StatusIM = original.StatusIM;

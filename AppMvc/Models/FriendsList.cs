@@ -6,7 +6,6 @@ namespace AppMvc.Models
     {
         public List<IFriend> Friends { get; set; } = new List<IFriend>();
 
-         //Pagination
         public int NrOfPages { get; set; }
         public int PageSize { get; } = 5;
 

@@ -5,10 +5,7 @@ using Models.Common;
 
 public class FineAddressIM
 {
-    //Status of InputModel
     public StatusIM StatusIM { get; set; }
-
-    //Properties from Model which is to be edited in the <form>
     public Guid AddressId { get; set; } = Guid.NewGuid();
 
     [Required(ErrorMessage = "You must provide a street address")]

@@ -112,24 +112,20 @@ public class AddressController : Controller
                 NrPets = pets.FirstOrDefault(p => p.City == f.City && p.Country == f.Country)?.NrPets ?? 0
             });
 
-
-            // Get all addresses (use a large page size to get all)
             var addressinfo = await _addressesService.ReadAddressesAsync(true, false, null, 0, 1000);
 
-            // Filter friends whose address is in the selected country
+            // Hämtar vänner i valda landet 
             var allFriends = addressinfo.PageItems
                 .SelectMany(a => a.Friends)
                 .Where(f => f.Address?.Country == vm.Filter)
                 .ToList();
 
-            // Calculate pagination
             vm.NrOfPages = (int)Math.Ceiling(allFriends.Count / (double)PageSize);
             vm.ThisPageNr = Math.Min(thisPageNr, vm.NrOfPages - 1);
             vm.PrevPageNr = Math.Max(0, vm.ThisPageNr - 1);
             vm.NextPageNr = Math.Min(vm.NrOfPages - 1, vm.ThisPageNr + 1);
             vm.PresentPages = vm.NrOfPages;
 
-            // Get friends for current page
             vm.Friends = allFriends
                 .Skip(vm.ThisPageNr * PageSize)
                 .Take(PageSize)
